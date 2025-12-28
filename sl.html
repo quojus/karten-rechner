@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&P Kartensystem - Spielleiter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .header-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header-btn {
+            padding: 10px 20px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: #1e3a5f;
+            color: #fff;
+        }
+
+        .header-btn.primary {
+            background: #4a90d9;
+            border-color: #4a90d9;
+            color: #fff;
+        }
+
+        .header-btn.primary:hover {
+            background: #5a9fe9;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: #16213e;
+            border: none;
+            border-radius: 8px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: #4a90d9;
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Sections */
+        .section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: #0f3460;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #4a90d9;
+        }
+
+        .attribute-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .attribute-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .attribute-input {
+            padding: 10px;
+            background: #0f3460;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Spieler-Liste */
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .player-card {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 1fr 120px 1fr auto;
+            gap: 15px;
+            align-items: center;
+        }
+
+        @media (max-width: 800px) {
+            .player-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .player-card input[type="text"] {
+            padding: 8px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .player-card select {
+            padding: 8px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .symbol-assignment {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .symbol-select {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .symbol-select .symbol {
+            font-size: 1.2rem;
+        }
+
+        .symbol-select select {
+            padding: 4px 8px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .remove-btn {
+            padding: 8px 12px;
+            background: #7b241c;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .remove-btn:hover {
+            background: #943126;
+        }
+
+        /* Erweiterte Spieler-Karte */
+        .player-card-expanded {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .player-header input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .mode-toggle-small {
+            display: flex;
+            background: #16213e;
+            border-radius: 6px;
+            padding: 3px;
+        }
+
+        .mode-toggle-small button {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .mode-toggle-small button.active {
+            background: #4a90d9;
+            color: #fff;
+        }
+
+        .player-config {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .player-config {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .symbol-input-group {
+            background: #16213e;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .symbol-input-group .symbol-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .symbol-input-group .symbol-icon {
+            font-size: 1.3rem;
+        }
+
+        .symbol-input-group input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            background: #0f3460;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .symbol-input-group input[type="number"]:focus {
+            outline: none;
+            border-color: #4a90d9;
+        }
+
+        .typ-select-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .typ-select-row select {
+            flex: 1;
+            padding: 8px;
+            background: #16213e;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .player-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+        }
+
+        .deck-summary {
+            display: flex;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .deck-summary .pik { color: #9b59b6; }
+        .deck-summary .karo { color: #e67e22; }
+        .deck-summary .herz { color: #e74c3c; }
+        .deck-summary .kreuz { color: #27ae60; }
+        .deck-summary .joker { color: #f1c40f; }
+        .deck-summary .total { color: #4a90d9; font-weight: bold; }
+
+        /* Drag & Drop für Symbol-Zuordnung */
+        .dnd-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dnd-symbols {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 10px;
+            background: #16213e;
+            border-radius: 8px;
+        }
+
+        .dnd-symbol {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: #0f3460;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .dnd-symbol:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .dnd-symbol.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .dnd-symbol.placed {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .dnd-slots {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .dnd-slot {
+            width: 70px;
+            height: 80px;
+            background: #16213e;
+            border: 2px dashed #333;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .dnd-slot.drag-over {
+            border-color: #4a90d9;
+            background: #1e3a5f;
+        }
+
+        .dnd-slot .slot-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+
+        .dnd-slot .slot-symbol {
+            font-size: 1.8rem;
+            margin-top: 5px;
+            min-height: 30px;
+        }
+
+        .dnd-slot.filled {
+            border-style: solid;
+            border-color: #27ae60;
+        }
+
+        .dnd-hint {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .add-btn {
+            padding: 12px;
+            background: #27ae60;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .add-btn:hover {
+            background: #2ecc71;
+        }
+
+        /* Deck-Vorschau */
+        .deck-preview {
+            display: flex;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .deck-preview .herz { color: #e74c3c; }
+        .deck-preview .karo { color: #e67e22; }
+        .deck-preview .pik { color: #9b59b6; }
+        .deck-preview .kreuz { color: #27ae60; }
+        .deck-preview .joker { color: #f1c40f; }
+
+        /* Tabellen */
+        .prob-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        .prob-table th {
+            padding: 8px;
+            background: #0f3460;
+            color: #888;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .prob-table td {
+            padding: 6px;
+            text-align: center;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .prob-table .row-header {
+            color: #888;
+            font-weight: normal;
+            text-align: right;
+            padding-right: 10px;
+            background: #0f3460;
+        }
+
+        /* Schwierigkeits-Tabelle */
+        .difficulty-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-table th,
+        .difficulty-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .difficulty-table th {
+            color: #888;
+            font-weight: normal;
+        }
+
+        /* Durchschnitts-Übersicht */
+        .avg-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .avg-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .avg-card {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .avg-card .symbol {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .avg-card .symbol.herz { color: #e74c3c; }
+        .avg-card .symbol.karo { color: #e67e22; }
+        .avg-card .symbol.pik { color: #9b59b6; }
+        .avg-card .symbol.kreuz { color: #27ae60; }
+
+        .avg-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+
+        .avg-card .label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Spieler-Detail */
+        .player-select {
+            padding: 10px;
+            background: #0f3460;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 800px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-card {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .detail-card h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Keine Spieler Hinweis */
+        .no-players {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .info-box p {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Typ-Info */
+        .type-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .type-card {
+            background: #0f3460;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+
+        .type-card .name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .type-card .stats {
+            color: #888;
+        }
+
+        /* Filter Buttons */
+        .filter-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: #1e3a5f;
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: #4a90d9;
+            border-color: #4a90d9;
+            color: #fff;
+        }
+
+        /* Klassen-Karten */
+        .klassen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+        }
+
+        .klassen-card {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #333;
+            transition: all 0.2s;
+        }
+
+        .klassen-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .klassen-card.favorit {
+            background: #1a3a5f;
+        }
+
+        .klassen-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .klassen-card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .klassen-card-subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+
+        .favorit-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .favorit-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .favorit-btn.active {
+            color: #f1c40f;
+        }
+
+        .klassen-card-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .klassen-card-probs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .klassen-prob-item {
+            text-align: center;
+            padding: 8px;
+            background: #16213e;
+            border-radius: 6px;
+        }
+
+        .klassen-prob-item .symbol {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .klassen-prob-item .value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .klassen-card-footer {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .klassen-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        /* Hidden File Input */
+        .hidden-input {
+            display: none;
+        }
+
+        /* Status Message */
+        .status-msg {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .status-msg.success {
+            background: #1e5631;
+            color: #a3e4b7;
+            display: block;
+        }
+
+        .status-msg.error {
+            background: #5c1a1a;
+            color: #f5a3a3;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>P&P Kartensystem - Spielleiter</h1>
+    <p class="subtitle">Verwalte Spiele, Spieler und Wahrscheinlichkeiten</p>
+
+    <div class="header-buttons">
+        <button class="header-btn" onclick="exportGame()">Exportieren</button>
+        <button class="header-btn" onclick="document.getElementById('import-input').click()">Importieren</button>
+        <input type="file" id="import-input" class="hidden-input" accept=".json" onchange="importGame(event)">
+    </div>
+
+    <div id="status-message" class="status-msg"></div>
+
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('setup')">Setup</button>
+        <button class="tab-btn" onclick="switchTab('spieler')">Spieler</button>
+        <button class="tab-btn" onclick="switchTab('klassen')">Klassen</button>
+        <button class="tab-btn" onclick="switchTab('referenz')">Referenz</button>
+        <button class="tab-btn" onclick="switchTab('uebersicht')">Übersicht</button>
+        <button class="tab-btn" onclick="switchTab('detail')">Detail</button>
+    </div>
+
+    <!-- Tab: Setup -->
+    <div id="tab-setup" class="tab-content active">
+        <div class="section">
+            <h2>Spiel-Einstellungen</h2>
+
+            <div class="form-group">
+                <label>Spielname</label>
+                <input type="text" id="spiel-name" placeholder="z.B. Kampagne 1" onchange="updateGameName()">
+            </div>
+
+            <div class="form-group">
+                <label>Attribut-Namen (was bedeuten die Symbole?)</label>
+                <div class="attribute-grid">
+                    <div>
+                        <span style="color: #9b59b6; font-size: 1.2rem;">&#9824;</span>
+                        <input type="text" class="attribute-input" id="attr-0" value="Stärke" onchange="updateAttributes()">
+                    </div>
+                    <div>
+                        <span style="color: #e67e22; font-size: 1.2rem;">&#9830;</span>
+                        <input type="text" class="attribute-input" id="attr-1" value="Geschick" onchange="updateAttributes()">
+                    </div>
+                    <div>
+                        <span style="color: #e74c3c; font-size: 1.2rem;">&#9829;</span>
+                        <input type="text" class="attribute-input" id="attr-2" value="Wissen" onchange="updateAttributes()">
+                    </div>
+                    <div>
+                        <span style="color: #27ae60; font-size: 1.2rem;">&#9827;</span>
+                        <input type="text" class="attribute-input" id="attr-3" value="Charisma" onchange="updateAttributes()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Schnellübersicht: Spieler</h2>
+            <div id="setup-player-list">
+                <p class="no-players">Noch keine Spieler. Wechsle zum Tab "Spieler" um welche hinzuzufügen.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Charaktertypen (A-N)</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">
+                Die Kartenverteilung ist fest pro Typ. Der Spieler wählt, welches Symbol welche Anzahl bekommt.
+            </p>
+            <div style="display:flex;gap:20px;margin-bottom:15px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:12px;height:12px;background:#27ae60;border-radius:3px;"></span>
+                    <span style="color:#27ae60;font-size:0.85rem;"><strong>Generalist</strong> – Überall gleich (0% Spanne)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:12px;height:12px;background:#f39c12;border-radius:3px;"></span>
+                    <span style="color:#f39c12;font-size:0.85rem;"><strong>Moderat</strong> – Spürbare Unterschiede (15-35%)</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="width:12px;height:12px;background:#e74c3c;border-radius:3px;"></span>
+                    <span style="color:#e74c3c;font-size:0.85rem;"><strong>Extrem</strong> – Riesige Unterschiede (40%+)</span>
+                </div>
+            </div>
+            <div class="type-info" id="type-info-grid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Spieler -->
+    <div id="tab-spieler" class="tab-content">
+        <div class="section">
+            <h2>Spieler verwalten</h2>
+
+            <div class="player-list" id="player-list">
+                <!-- Filled by JS -->
+            </div>
+
+            <button class="add-btn" onclick="addPlayer()" style="margin-top: 15px;">+ Spieler hinzufügen</button>
+        </div>
+    </div>
+
+    <!-- Tab: Klassen -->
+    <div id="tab-klassen" class="tab-content">
+        <div class="section">
+            <h2>Klassenübersicht</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">
+                Vergleiche alle Charaktertypen. Markiere Favoriten mit ★ für schnellen Zugriff.
+            </p>
+
+            <!-- Filter -->
+            <div class="klassen-filter" style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+                <button class="filter-btn active" onclick="filterKlassen('alle')">Alle</button>
+                <button class="filter-btn" onclick="filterKlassen('favoriten')">★ Favoriten</button>
+                <button class="filter-btn" onclick="filterKlassen('Generalist')" style="border-color:#27ae60;color:#27ae60;">Generalist</button>
+                <button class="filter-btn" onclick="filterKlassen('Moderat')" style="border-color:#f39c12;color:#f39c12;">Moderat</button>
+                <button class="filter-btn" onclick="filterKlassen('Extrem')" style="border-color:#e74c3c;color:#e74c3c;">Extrem</button>
+            </div>
+
+            <!-- Schwierigkeits-Auswahl -->
+            <div style="margin-bottom:20px;">
+                <label style="color:#888;font-size:0.9rem;">Schwierigkeit für Vergleich: </label>
+                <select id="klassen-difficulty" onchange="renderKlassenOverview()" style="padding:6px 10px;background:#0f3460;border:1px solid #333;border-radius:4px;color:#fff;">
+                    <option value="trivial">Trivial (5 ziehen, 1 benötigt)</option>
+                    <option value="leicht">Leicht (4 ziehen, 1 benötigt)</option>
+                    <option value="normal" selected>Normal (4 ziehen, 2 benötigt)</option>
+                    <option value="schwer">Schwer (3 ziehen, 2 benötigt)</option>
+                    <option value="extrem">Extrem (3 ziehen, 3 benötigt)</option>
+                </select>
+            </div>
+
+            <div id="klassen-overview">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Detail-Ansicht</h2>
+            <select class="player-select" id="klassen-detail-select" onchange="renderKlassenDetail()">
+                <option value="">-- Typ wählen --</option>
+            </select>
+            <div id="klassen-detail-content">
+                <p class="no-players">Wähle einen Typ aus der Liste oben für vollständige Wahrscheinlichkeitstabellen.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Referenz -->
+    <div id="tab-referenz" class="tab-content">
+        <div class="section">
+            <h2>Schwierigkeitsstufen</h2>
+            <table class="difficulty-table">
+                <thead>
+                    <tr>
+                        <th>Stufe</th>
+                        <th>Karten ziehen</th>
+                        <th>Symbole benötigt</th>
+                        <th>Beschreibung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Trivial</strong></td>
+                        <td>5</td>
+                        <td>1</td>
+                        <td>Nahezu sicher erfolgreich</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Leicht</strong></td>
+                        <td>4</td>
+                        <td>1</td>
+                        <td>Gute Erfolgsaussichten</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Normal</strong></td>
+                        <td>4</td>
+                        <td>2</td>
+                        <td>Standard-Schwierigkeit</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Schwer</strong></td>
+                        <td>3</td>
+                        <td>2</td>
+                        <td>Herausfordernd</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extrem</strong></td>
+                        <td>3</td>
+                        <td>3</td>
+                        <td>Sehr unwahrscheinlich</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Baseline-Wahrscheinlichkeiten (5/5/5/5, 0 Joker)</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">
+                Referenz für ausgeglichene Decks. Zeilen = benötigte Symbole, Spalten = gezogene Karten.
+            </p>
+            <div id="baseline-table"></div>
+        </div>
+    </div>
+
+    <!-- Tab: Übersicht -->
+    <div id="tab-uebersicht" class="tab-content">
+        <div class="section">
+            <h2>Gruppen-Durchschnitt</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px;">
+                Gemittelte Wahrscheinlichkeiten für Normal-Probe (4 Karten, 2 Symbole) über alle Spieler.
+            </p>
+            <div class="avg-grid" id="avg-grid">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Schnellreferenz: Alle Spieler</h2>
+            <div id="quick-ref-table">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: Detail -->
+    <div id="tab-detail" class="tab-content">
+        <div class="section">
+            <h2>Spieler-Detail</h2>
+
+            <select class="player-select" id="detail-player-select" onchange="updateDetailView()">
+                <option value="">-- Spieler wählen --</option>
+            </select>
+
+            <div id="detail-content">
+                <p class="no-players">Wähle einen Spieler aus der Liste oben.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // DATEN
+        // ========================================
+
+        // Charaktertypen (aus P&P_Kartensystem.md)
+        // Klassen basierend auf Spanne bei Normal-Schwierigkeit:
+        // - Generalist (0%): Überall gleich
+        // - Moderat (15-35%): Spürbare Unterschiede
+        // - Extrem (40%+): Riesige Unterschiede
+        const CHARAKTER_TYPEN = {
+            'A': { verteilung: [7, 5, 5, 3], joker: 0, hand: 2, name: 'Fokussierter Planer', klasse: 'Extrem', stil: 'Polarisiert, plant voraus' },
+            'B': { verteilung: [7, 5, 5, 3], joker: 4, hand: 0, name: 'Flexibler Spezialist', klasse: 'Moderat', stil: 'Spezialisiert, improvisiert' },
+            'C': { verteilung: [5, 5, 5, 5], joker: 0, hand: 4, name: 'Kontrollierter Generalist', klasse: 'Generalist', stil: 'Überall gut, maximale Kontrolle' },
+            'D': { verteilung: [5, 5, 5, 5], joker: 4, hand: 0, name: 'Improvisierender Generalist', klasse: 'Generalist', stil: 'Überall okay, flexibel' },
+            'E': { verteilung: [8, 4, 4, 4], joker: 2, hand: 0, name: 'Extremer Spezialist', klasse: 'Moderat', stil: 'Ein Ass, drei Schwächen' },
+            'F': { verteilung: [6, 6, 6, 2], joker: 0, hand: 2, name: 'Dreifach-Talent', klasse: 'Extrem', stil: 'Drei Stärken, eine Katastrophe' },
+            'G': { verteilung: [5, 5, 5, 5], joker: 2, hand: 2, name: 'Ausgewogener Hybrid', klasse: 'Generalist', stil: 'Referenz-Spieler' },
+            'H': { verteilung: [6, 6, 4, 4], joker: 0, hand: 2, name: 'Doppel-Fokus Planer', klasse: 'Moderat', stil: 'Zwei Stärken, plant' },
+            'I': { verteilung: [6, 6, 4, 4], joker: 4, hand: 0, name: 'Doppel-Fokus Improv', klasse: 'Moderat', stil: 'Zwei Stärken, improvisiert' },
+            'J': { verteilung: [7, 3, 7, 3], joker: 2, hand: 0, name: 'Gegensatz-Spezialist', klasse: 'Moderat', stil: 'Zwei super, zwei schlecht' },
+            'K': { verteilung: [7, 5, 5, 3], joker: 0, hand: 4, name: 'Extreme Kontrolle', klasse: 'Moderat', stil: 'Einsteiger-freundlich' },
+            'L': { verteilung: [6, 5, 5, 4], joker: 2, hand: 2, name: 'Milder Spezialist', klasse: 'Moderat', stil: 'Leichte Unterschiede' },
+            'M': { verteilung: [4, 4, 4, 4], joker: 0, hand: 2, name: 'Minimalist', klasse: 'Generalist', stil: 'Kleines Deck' },
+            'N': { verteilung: [6, 6, 6, 6], joker: 4, hand: 0, name: 'Maximalist', klasse: 'Generalist', stil: 'Großes Deck' }
+        };
+
+        // Klassen-Farben für die Anzeige
+        const KLASSEN_FARBEN = {
+            'Generalist': '#27ae60',
+            'Moderat': '#f39c12',
+            'Extrem': '#e74c3c'
+        };
+
+        const SYMBOLE = ['♠', '♦', '♥', '♣'];
+        const SYMBOL_KLASSEN = ['pik', 'karo', 'herz', 'kreuz'];
+
+        // Schwierigkeits-Definitionen
+        const SCHWIERIGKEITEN = {
+            trivial: { ziehen: 5, benoetigt: 1, name: 'Trivial' },
+            leicht: { ziehen: 4, benoetigt: 1, name: 'Leicht' },
+            normal: { ziehen: 4, benoetigt: 2, name: 'Normal' },
+            schwer: { ziehen: 3, benoetigt: 2, name: 'Schwer' },
+            extrem: { ziehen: 3, benoetigt: 3, name: 'Extrem' }
+        };
+
+        // Spiel-Daten
+        let gameData = {
+            spielName: '',
+            attribute: ['Stärke', 'Geschick', 'Wissen', 'Charisma'],
+            spieler: [],
+            favoriten: []  // Favorisierte Charaktertypen (z.B. ['A', 'C', 'G'])
+        };
+
+        let nextPlayerId = 1;
+        let klassenFilter = 'alle';  // 'alle', 'favoriten', 'Generalist', 'Moderat', 'Extrem'
+
+        // ========================================
+        // WAHRSCHEINLICHKEITS-BERECHNUNG
+        // ========================================
+
+        function binomial(n, k) {
+            if (k < 0 || k > n) return 0;
+            if (k === 0 || k === n) return 1;
+            let result = 1;
+            for (let i = 0; i < k; i++) {
+                result = result * (n - i) / (i + 1);
+            }
+            return Math.round(result);
+        }
+
+        function multivariateHypergeomPMF(gezogen, symbolGezogen, jokerGezogen,
+                                           symbolCount, jokerCount, andereCount) {
+            const andereGezogen = gezogen - symbolGezogen - jokerGezogen;
+            if (andereGezogen < 0 || andereGezogen > andereCount) return 0;
+            if (symbolGezogen < 0 || symbolGezogen > symbolCount) return 0;
+            if (jokerGezogen < 0 || jokerGezogen > jokerCount) return 0;
+
+            const total = symbolCount + jokerCount + andereCount;
+            const zaehler = binomial(symbolCount, symbolGezogen) *
+                           binomial(jokerCount, jokerGezogen) *
+                           binomial(andereCount, andereGezogen);
+            const nenner = binomial(total, gezogen);
+            return nenner > 0 ? zaehler / nenner : 0;
+        }
+
+        function erfolgswahrscheinlichkeit(gezogen, benoetigt, symbolCount, jokerCount, totalDeck) {
+            if (benoetigt <= 0) return 1;
+            const andereCount = totalDeck - symbolCount - jokerCount;
+            let erfolg = 0;
+
+            for (let s = 0; s <= Math.min(symbolCount, gezogen); s++) {
+                for (let j = 0; j <= Math.min(jokerCount, gezogen - s); j++) {
+                    if (s + j >= benoetigt) {
+                        erfolg += multivariateHypergeomPMF(
+                            gezogen, s, j, symbolCount, jokerCount, andereCount
+                        );
+                    }
+                }
+            }
+            return Math.min(erfolg, 1);
+        }
+
+        function erstelleMatrix(symbolCount, jokerCount, totalDeck) {
+            const matrix = [];
+            for (let benoetigt = 1; benoetigt <= 5; benoetigt++) {
+                const row = [];
+                for (let gezogen = 1; gezogen <= 10; gezogen++) {
+                    row.push(erfolgswahrscheinlichkeit(gezogen, benoetigt, symbolCount, jokerCount, totalDeck));
+                }
+                matrix.push(row);
+            }
+            return matrix;
+        }
+
+        // Farbe basierend auf Wert
+        function getColor(value) {
+            if (value === 0) return '#ffffff';
+            if (value < 0.01) return '#d73027';
+
+            const stops = [
+                { pos: 0, r: 215, g: 48, b: 39 },
+                { pos: 0.25, r: 244, g: 109, b: 67 },
+                { pos: 0.5, r: 254, g: 224, b: 139 },
+                { pos: 0.75, r: 166, g: 217, b: 106 },
+                { pos: 1, r: 26, g: 152, b: 80 }
+            ];
+
+            let lower = stops[0], upper = stops[stops.length - 1];
+            for (let i = 0; i < stops.length - 1; i++) {
+                if (value >= stops[i].pos && value <= stops[i + 1].pos) {
+                    lower = stops[i];
+                    upper = stops[i + 1];
+                    break;
+                }
+            }
+
+            const range = upper.pos - lower.pos;
+            const factor = range > 0 ? (value - lower.pos) / range : 0;
+            const r = Math.round(lower.r + (upper.r - lower.r) * factor);
+            const g = Math.round(lower.g + (upper.g - lower.g) * factor);
+            const b = Math.round(lower.b + (upper.b - lower.b) * factor);
+
+            return `rgb(${r},${g},${b})`;
+        }
+
+        function getTextColor(value) {
+            if (value === 0) return '#999';
+            if (value < 0.35 || value > 0.7) return '#fff';
+            return '#000';
+        }
+
+        // ========================================
+        // SPIELER-FUNKTIONEN
+        // ========================================
+
+        function addPlayer() {
+            const id = nextPlayerId++;
+            gameData.spieler.push({
+                id: id,
+                name: `Spieler ${id}`,
+                modus: 'custom',  // 'typ' oder 'custom'
+                typ: 'C',
+                zuordnung: [0, 1, 2, 3], // Nur für Typ-Modus
+                // Benutzerdefinierte Werte (Standard: ausgeglichen)
+                deck: {
+                    pik: 5,
+                    karo: 5,
+                    herz: 5,
+                    kreuz: 5,
+                    joker: 0
+                }
+            });
+            renderAll();
+        }
+
+        function removePlayer(id) {
+            gameData.spieler = gameData.spieler.filter(p => p.id !== id);
+            renderAll();
+        }
+
+        function updatePlayerName(id, name) {
+            const player = gameData.spieler.find(p => p.id === id);
+            if (player) {
+                player.name = name;
+                renderAll();
+            }
+        }
+
+        function setPlayerModus(id, modus) {
+            const player = gameData.spieler.find(p => p.id === id);
+            if (player) {
+                player.modus = modus;
+                // Beim Wechsel zu custom: aktuelle Typ-Werte übernehmen
+                if (modus === 'custom' && player.typ) {
+                    const typDeck = getPlayerDeckFromTyp(player);
+                    player.deck = { ...typDeck };
+                }
+                renderAll();
+            }
+        }
+
+        function updatePlayerTyp(id, typ) {
+            const player = gameData.spieler.find(p => p.id === id);
+            if (player) {
+                player.typ = typ;
+                // Zuordnung zurücksetzen
+                player.zuordnung = [0, 1, 2, 3];
+                renderAll();
+            }
+        }
+
+        function updatePlayerZuordnung(id, symbolIndex, verteilungsIndex) {
+            const player = gameData.spieler.find(p => p.id === id);
+            if (player) {
+                player.zuordnung[symbolIndex] = parseInt(verteilungsIndex);
+                renderAll();
+            }
+        }
+
+        function updatePlayerDeckValue(id, symbol, value) {
+            const player = gameData.spieler.find(p => p.id === id);
+            if (player) {
+                player.deck[symbol] = Math.max(0, Math.min(20, parseInt(value) || 0));
+                renderAll();
+            }
+        }
+
+        function getPlayerDeckFromTyp(player) {
+            const typ = CHARAKTER_TYPEN[player.typ];
+            return {
+                pik: typ.verteilung[player.zuordnung[0]],
+                karo: typ.verteilung[player.zuordnung[1]],
+                herz: typ.verteilung[player.zuordnung[2]],
+                kreuz: typ.verteilung[player.zuordnung[3]],
+                joker: typ.joker
+            };
+        }
+
+        function getPlayerDeck(player) {
+            let deck;
+            if (player.modus === 'typ') {
+                deck = getPlayerDeckFromTyp(player);
+            } else {
+                // Custom-Modus
+                deck = { ...player.deck };
+            }
+            deck.total = deck.pik + deck.karo + deck.herz + deck.kreuz + deck.joker;
+            return deck;
+        }
+
+        // ========================================
+        // DRAG & DROP FUNKTIONEN
+        // ========================================
+
+        let draggedSymbol = null;
+        let draggedPlayerId = null;
+
+        function handleDragStart(event) {
+            draggedSymbol = parseInt(event.target.dataset.symbol);
+            draggedPlayerId = parseInt(event.target.dataset.player);
+            event.target.classList.add('dragging');
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', draggedSymbol);
+        }
+
+        function handleDragEnd(event) {
+            event.target.classList.remove('dragging');
+            draggedSymbol = null;
+            draggedPlayerId = null;
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+            event.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+
+            const slotIdx = parseInt(event.currentTarget.dataset.slot);
+            const playerId = parseInt(event.currentTarget.dataset.player);
+
+            if (draggedPlayerId !== playerId) return;
+
+            const player = gameData.spieler.find(p => p.id === playerId);
+            if (!player) return;
+
+            // Finde, ob dieses Symbol schon woanders platziert ist
+            const currentSlotOfSymbol = player.zuordnung[draggedSymbol];
+
+            // Finde, ob dieser Slot schon ein Symbol hat
+            const currentSymbolInSlot = player.zuordnung.findIndex(z => z === slotIdx);
+
+            // Tausche die Zuordnungen
+            if (currentSymbolInSlot !== -1) {
+                // Slot hat bereits ein Symbol -> tausche
+                player.zuordnung[currentSymbolInSlot] = currentSlotOfSymbol;
+            }
+            player.zuordnung[draggedSymbol] = slotIdx;
+
+            renderAll();
+        }
+
+        // ========================================
+        // RENDER-FUNKTIONEN
+        // ========================================
+
+        function renderPlayerList() {
+            const container = document.getElementById('player-list');
+
+            if (gameData.spieler.length === 0) {
+                container.innerHTML = '<p class="no-players">Noch keine Spieler hinzugefügt.</p>';
+                return;
+            }
+
+            let html = '';
+            for (const player of gameData.spieler) {
+                const typ = CHARAKTER_TYPEN[player.typ];
+                const deck = getPlayerDeck(player);
+                const isCustom = player.modus === 'custom';
+
+                html += `
+                    <div class="player-card-expanded">
+                        <div class="player-header">
+                            <input type="text" value="${player.name}"
+                                   onchange="updatePlayerName(${player.id}, this.value)"
+                                   placeholder="Name">
+
+                            <div class="mode-toggle-small">
+                                <button class="${!isCustom ? 'active' : ''}"
+                                        onclick="setPlayerModus(${player.id}, 'typ')">Typ</button>
+                                <button class="${isCustom ? 'active' : ''}"
+                                        onclick="setPlayerModus(${player.id}, 'custom')">Frei</button>
+                            </div>
+
+                            <button class="remove-btn" onclick="removePlayer(${player.id})">✕</button>
+                        </div>
+
+                        ${isCustom ? `
+                            <!-- Custom-Modus: Direkte Eingabe -->
+                            <div class="player-config">
+                                <div class="symbol-input-group">
+                                    <div class="symbol-label">
+                                        <span class="symbol-icon" style="color:#9b59b6">♠</span>
+                                        <span>Pik</span>
+                                    </div>
+                                    <input type="number" min="0" max="20" value="${player.deck.pik}"
+                                           onchange="updatePlayerDeckValue(${player.id}, 'pik', this.value)">
+                                </div>
+                                <div class="symbol-input-group">
+                                    <div class="symbol-label">
+                                        <span class="symbol-icon" style="color:#e67e22">♦</span>
+                                        <span>Karo</span>
+                                    </div>
+                                    <input type="number" min="0" max="20" value="${player.deck.karo}"
+                                           onchange="updatePlayerDeckValue(${player.id}, 'karo', this.value)">
+                                </div>
+                                <div class="symbol-input-group">
+                                    <div class="symbol-label">
+                                        <span class="symbol-icon" style="color:#e74c3c">♥</span>
+                                        <span>Herz</span>
+                                    </div>
+                                    <input type="number" min="0" max="20" value="${player.deck.herz}"
+                                           onchange="updatePlayerDeckValue(${player.id}, 'herz', this.value)">
+                                </div>
+                                <div class="symbol-input-group">
+                                    <div class="symbol-label">
+                                        <span class="symbol-icon" style="color:#27ae60">♣</span>
+                                        <span>Kreuz</span>
+                                    </div>
+                                    <input type="number" min="0" max="20" value="${player.deck.kreuz}"
+                                           onchange="updatePlayerDeckValue(${player.id}, 'kreuz', this.value)">
+                                </div>
+                                <div class="symbol-input-group">
+                                    <div class="symbol-label">
+                                        <span class="symbol-icon" style="color:#f1c40f">🃏</span>
+                                        <span>Joker</span>
+                                    </div>
+                                    <input type="number" min="0" max="6" value="${player.deck.joker}"
+                                           onchange="updatePlayerDeckValue(${player.id}, 'joker', this.value)">
+                                </div>
+                            </div>
+                        ` : `
+                            <!-- Typ-Modus: Typ wählen + Drag & Drop Zuordnung -->
+                            <div class="typ-select-row">
+                                <select onchange="updatePlayerTyp(${player.id}, this.value)">
+                                    ${Object.keys(CHARAKTER_TYPEN).map(t => {
+                                        const typData = CHARAKTER_TYPEN[t];
+                                        return `<option value="${t}" ${player.typ === t ? 'selected' : ''}>
+                                            ${t} – ${typData.name} [${typData.klasse}]
+                                        </option>`;
+                                    }).join('')}
+                                </select>
+                            </div>
+                            <div class="typ-info-line" style="color:${KLASSEN_FARBEN[typ.klasse]};font-size:0.85rem;margin-bottom:10px;">
+                                ${typ.stil} • ${typ.verteilung.join('/')} + ${typ.joker}J + ${typ.hand}H
+                            </div>
+                            <div class="dnd-container" id="dnd-${player.id}">
+                                <div class="dnd-symbols">
+                                    ${SYMBOLE.map((sym, i) => {
+                                        const isPlaced = player.zuordnung.includes(i);
+                                        return `
+                                            <div class="dnd-symbol ${isPlaced ? '' : ''}"
+                                                 draggable="true"
+                                                 data-player="${player.id}"
+                                                 data-symbol="${i}"
+                                                 style="color: ${getSymbolColor(i)}"
+                                                 ondragstart="handleDragStart(event)"
+                                                 ondragend="handleDragEnd(event)">
+                                                ${sym}
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <div class="dnd-slots">
+                                    ${typ.verteilung.map((val, slotIdx) => {
+                                        const assignedSymbolIdx = player.zuordnung.findIndex(z => z === slotIdx);
+                                        const hasSymbol = assignedSymbolIdx !== -1;
+                                        return `
+                                            <div class="dnd-slot ${hasSymbol ? 'filled' : ''}"
+                                                 data-player="${player.id}"
+                                                 data-slot="${slotIdx}"
+                                                 ondragover="handleDragOver(event)"
+                                                 ondragleave="handleDragLeave(event)"
+                                                 ondrop="handleDrop(event)">
+                                                <div class="slot-value">${val}</div>
+                                                <div class="slot-symbol" style="color: ${hasSymbol ? getSymbolColor(assignedSymbolIdx) : 'transparent'}">
+                                                    ${hasSymbol ? SYMBOLE[assignedSymbolIdx] : ''}
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <div class="dnd-hint">Ziehe die Symbole auf die Kartenwerte</div>
+                            </div>
+                        `}
+
+                        <div class="player-footer">
+                            <div class="deck-summary">
+                                <span class="pik">♠${deck.pik}</span>
+                                <span class="karo">♦${deck.karo}</span>
+                                <span class="herz">♥${deck.herz}</span>
+                                <span class="kreuz">♣${deck.kreuz}</span>
+                                <span class="joker">🃏${deck.joker}</span>
+                                <span class="total">= ${deck.total}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function getSymbolColor(index) {
+            const colors = ['#9b59b6', '#e67e22', '#e74c3c', '#27ae60'];
+            return colors[index];
+        }
+
+        function renderSetupPlayerList() {
+            const container = document.getElementById('setup-player-list');
+
+            if (gameData.spieler.length === 0) {
+                container.innerHTML = '<p class="no-players">Noch keine Spieler. Wechsle zum Tab "Spieler" um welche hinzuzufügen.</p>';
+                return;
+            }
+
+            let html = '<table class="difficulty-table"><thead><tr><th>Name</th><th>Typ / Modus</th><th>Deck</th></tr></thead><tbody>';
+            for (const player of gameData.spieler) {
+                const deck = getPlayerDeck(player);
+                let modusText;
+                if (player.modus === 'custom') {
+                    modusText = '<span style="color:#888">Frei</span>';
+                } else {
+                    const typ = CHARAKTER_TYPEN[player.typ];
+                    const klasseColor = KLASSEN_FARBEN[typ.klasse];
+                    modusText = `${player.typ} – ${typ.name} <span style="color:${klasseColor}">[${typ.klasse}]</span>`;
+                }
+                html += `
+                    <tr>
+                        <td><strong>${player.name}</strong></td>
+                        <td>${modusText}</td>
+                        <td>
+                            <span style="color:#9b59b6">♠${deck.pik}</span>
+                            <span style="color:#e67e22">♦${deck.karo}</span>
+                            <span style="color:#e74c3c">♥${deck.herz}</span>
+                            <span style="color:#27ae60">♣${deck.kreuz}</span>
+                            <span style="color:#f1c40f">🃏${deck.joker}</span>
+                        </td>
+                    </tr>
+                `;
+            }
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function renderTypeInfo() {
+            const container = document.getElementById('type-info-grid');
+            let html = '';
+
+            for (const [key, typ] of Object.entries(CHARAKTER_TYPEN)) {
+                const total = typ.verteilung.reduce((a, b) => a + b, 0) + typ.joker;
+                const klasseColor = KLASSEN_FARBEN[typ.klasse];
+                html += `
+                    <div class="type-card" style="border-left: 3px solid ${klasseColor}">
+                        <div class="name" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>${key} – ${typ.name}</span>
+                            <span style="color:${klasseColor};font-size:0.75rem;padding:2px 6px;background:${klasseColor}22;border-radius:4px;">${typ.klasse}</span>
+                        </div>
+                        <div class="stats">
+                            ${typ.stil}<br>
+                            <span style="color:#888">${typ.verteilung.join('/')} + ${typ.joker}J + ${typ.hand}H = ${total}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderBaselineTable() {
+            const container = document.getElementById('baseline-table');
+            const matrix = erstelleMatrix(5, 0, 20);
+
+            let html = '<table class="prob-table"><thead><tr><th></th>';
+            for (let i = 1; i <= 10; i++) {
+                html += `<th>${i}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            for (let row = 0; row < 5; row++) {
+                html += `<tr><td class="row-header">${row + 1}</td>`;
+                for (let col = 0; col < 10; col++) {
+                    const value = matrix[row][col];
+                    const pct = Math.round(value * 100);
+                    const bg = getColor(value);
+                    const color = getTextColor(value);
+                    html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            html += '<p style="color:#888;font-size:0.8rem;margin-top:8px;">Zeilen = benötigte Symbole, Spalten = gezogene Karten</p>';
+
+            container.innerHTML = html;
+        }
+
+        function renderAvgGrid() {
+            const container = document.getElementById('avg-grid');
+
+            if (gameData.spieler.length === 0) {
+                container.innerHTML = '<p class="no-players" style="grid-column:1/-1;">Noch keine Spieler vorhanden.</p>';
+                return;
+            }
+
+            // Durchschnitt berechnen für Normal-Probe (4 Karten, 2 Symbole)
+            const avg = { pik: 0, karo: 0, herz: 0, kreuz: 0 };
+            const symbols = ['pik', 'karo', 'herz', 'kreuz'];
+
+            for (const player of gameData.spieler) {
+                const deck = getPlayerDeck(player);
+                for (const sym of symbols) {
+                    avg[sym] += erfolgswahrscheinlichkeit(4, 2, deck[sym], deck.joker, deck.total);
+                }
+            }
+
+            for (const sym of symbols) {
+                avg[sym] /= gameData.spieler.length;
+            }
+
+            const symbolIcons = { pik: '♠', karo: '♦', herz: '♥', kreuz: '♣' };
+
+            let html = '';
+            for (const sym of symbols) {
+                const pct = Math.round(avg[sym] * 100);
+                html += `
+                    <div class="avg-card">
+                        <div class="symbol ${sym}">${symbolIcons[sym]}</div>
+                        <div class="value">${pct}%</div>
+                        <div class="label">${gameData.attribute[symbols.indexOf(sym)]}</div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderQuickRef() {
+            const container = document.getElementById('quick-ref-table');
+
+            if (gameData.spieler.length === 0) {
+                container.innerHTML = '<p class="no-players">Noch keine Spieler vorhanden.</p>';
+                return;
+            }
+
+            const schwierigkeiten = [
+                { name: 'Trivial', ziehen: 5, benoetigt: 1 },
+                { name: 'Leicht', ziehen: 4, benoetigt: 1 },
+                { name: 'Normal', ziehen: 4, benoetigt: 2 },
+                { name: 'Schwer', ziehen: 3, benoetigt: 2 },
+                { name: 'Extrem', ziehen: 3, benoetigt: 3 }
+            ];
+
+            let html = '<table class="prob-table"><thead><tr><th>Spieler</th>';
+            for (const s of schwierigkeiten) {
+                html += `<th>${s.name}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            for (const player of gameData.spieler) {
+                const deck = getPlayerDeck(player);
+                html += `<tr><td class="row-header">${player.name}</td>`;
+
+                for (const s of schwierigkeiten) {
+                    // Durchschnitt über alle Symbole
+                    let sum = 0;
+                    for (const sym of ['pik', 'karo', 'herz', 'kreuz']) {
+                        sum += erfolgswahrscheinlichkeit(s.ziehen, s.benoetigt, deck[sym], deck.joker, deck.total);
+                    }
+                    const avg = sum / 4;
+                    const pct = Math.round(avg * 100);
+                    const bg = getColor(avg);
+                    const color = getTextColor(avg);
+                    html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            html += '<p style="color:#888;font-size:0.8rem;margin-top:8px;">Durchschnittliche Erfolgswahrscheinlichkeit über alle Attribute</p>';
+
+            container.innerHTML = html;
+        }
+
+        function renderDetailPlayerSelect() {
+            const select = document.getElementById('detail-player-select');
+            let html = '<option value="">-- Spieler wählen --</option>';
+
+            for (const player of gameData.spieler) {
+                if (player.modus === 'custom') {
+                    html += `<option value="${player.id}">${player.name} (Frei)</option>`;
+                } else {
+                    const typ = CHARAKTER_TYPEN[player.typ];
+                    html += `<option value="${player.id}">${player.name} (${player.typ} – ${typ.name})</option>`;
+                }
+            }
+
+            select.innerHTML = html;
+        }
+
+        // ========================================
+        // KLASSEN-TAB FUNKTIONEN
+        // ========================================
+
+        function toggleFavorit(typKey) {
+            const idx = gameData.favoriten.indexOf(typKey);
+            if (idx === -1) {
+                gameData.favoriten.push(typKey);
+            } else {
+                gameData.favoriten.splice(idx, 1);
+            }
+            renderKlassenOverview();
+        }
+
+        function filterKlassen(filter) {
+            klassenFilter = filter;
+
+            // Update active state of filter buttons
+            document.querySelectorAll('.klassen-filter .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            renderKlassenOverview();
+        }
+
+        function renderKlassenOverview() {
+            const container = document.getElementById('klassen-overview');
+            const difficultySelect = document.getElementById('klassen-difficulty');
+            const difficulty = SCHWIERIGKEITEN[difficultySelect.value];
+
+            let html = '<div class="klassen-grid">';
+
+            for (const [key, typ] of Object.entries(CHARAKTER_TYPEN)) {
+                // Filter anwenden
+                if (klassenFilter === 'favoriten' && !gameData.favoriten.includes(key)) continue;
+                if (['Generalist', 'Moderat', 'Extrem'].includes(klassenFilter) && typ.klasse !== klassenFilter) continue;
+
+                const isFavorit = gameData.favoriten.includes(key);
+                const klasseColor = KLASSEN_FARBEN[typ.klasse];
+                const total = typ.verteilung.reduce((a, b) => a + b, 0) + typ.joker;
+
+                // Wahrscheinlichkeiten für gewählte Schwierigkeit berechnen
+                const probs = typ.verteilung.map(count =>
+                    erfolgswahrscheinlichkeit(difficulty.ziehen, difficulty.benoetigt, count, typ.joker, total)
+                );
+
+                // Min/Max/Durchschnitt
+                const minProb = Math.min(...probs);
+                const maxProb = Math.max(...probs);
+                const avgProb = probs.reduce((a, b) => a + b, 0) / probs.length;
+                const spanne = maxProb - minProb;
+
+                html += `
+                    <div class="klassen-card ${isFavorit ? 'favorit' : ''}" style="border-left-color:${klasseColor}">
+                        <div class="klassen-card-header">
+                            <div>
+                                <div class="klassen-card-title">${key} – ${typ.name}</div>
+                                <div class="klassen-card-subtitle">${typ.stil}</div>
+                            </div>
+                            <button class="favorit-btn ${isFavorit ? 'active' : ''}" onclick="toggleFavorit('${key}')" title="Als Favorit markieren">
+                                ${isFavorit ? '★' : '☆'}
+                            </button>
+                        </div>
+
+                        <div class="klassen-card-stats">
+                            <span>Deck: ${typ.verteilung.join('/')} + ${typ.joker}J + ${typ.hand}H</span>
+                            <span>= ${total} Karten</span>
+                        </div>
+
+                        <div class="klassen-card-probs">
+                            ${typ.verteilung.map((count, i) => {
+                                const prob = probs[i];
+                                const pct = Math.round(prob * 100);
+                                const bg = getColor(prob);
+                                const textColor = getTextColor(prob);
+                                const symbols = ['♠', '♦', '♥', '♣'];
+                                const colors = ['#9b59b6', '#e67e22', '#e74c3c', '#27ae60'];
+                                return `
+                                    <div class="klassen-prob-item">
+                                        <div class="symbol" style="color:${colors[i]}">${symbols[i]}</div>
+                                        <div class="value" style="background:${bg};color:${textColor};padding:4px;border-radius:4px;">${pct}%</div>
+                                        <div style="font-size:0.75rem;color:#888;margin-top:2px;">${count} Karten</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div class="klassen-card-footer">
+                            <span>Ø ${Math.round(avgProb * 100)}% | Spanne: ${Math.round(spanne * 100)}%</span>
+                            <span class="klassen-badge" style="background:${klasseColor}22;color:${klasseColor};">${typ.klasse}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+
+            // Wenn keine Ergebnisse
+            if (html === '<div class="klassen-grid"></div>') {
+                html = '<p class="no-players">Keine Typen gefunden. ' +
+                       (klassenFilter === 'favoriten' ? 'Markiere Typen mit ★ als Favorit.' : '') + '</p>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderKlassenDetailSelect() {
+            const select = document.getElementById('klassen-detail-select');
+            let html = '<option value="">-- Typ wählen --</option>';
+
+            // Favoriten zuerst
+            if (gameData.favoriten.length > 0) {
+                html += '<optgroup label="★ Favoriten">';
+                for (const key of gameData.favoriten) {
+                    const typ = CHARAKTER_TYPEN[key];
+                    if (typ) {
+                        html += `<option value="${key}">${key} – ${typ.name}</option>`;
+                    }
+                }
+                html += '</optgroup>';
+            }
+
+            // Alle anderen nach Klasse gruppiert
+            for (const klasse of ['Generalist', 'Moderat', 'Extrem']) {
+                html += `<optgroup label="${klasse}">`;
+                for (const [key, typ] of Object.entries(CHARAKTER_TYPEN)) {
+                    if (typ.klasse === klasse && !gameData.favoriten.includes(key)) {
+                        html += `<option value="${key}">${key} – ${typ.name}</option>`;
+                    }
+                }
+                html += '</optgroup>';
+            }
+
+            select.innerHTML = html;
+        }
+
+        function renderKlassenDetail() {
+            const select = document.getElementById('klassen-detail-select');
+            const container = document.getElementById('klassen-detail-content');
+            const typKey = select.value;
+
+            if (!typKey) {
+                container.innerHTML = '<p class="no-players">Wähle einen Typ aus der Liste oben für vollständige Wahrscheinlichkeitstabellen.</p>';
+                return;
+            }
+
+            const typ = CHARAKTER_TYPEN[typKey];
+            const klasseColor = KLASSEN_FARBEN[typ.klasse];
+            const total = typ.verteilung.reduce((a, b) => a + b, 0) + typ.joker;
+            const isFavorit = gameData.favoriten.includes(typKey);
+
+            let html = `
+                <div class="info-box" style="border-left: 4px solid ${klasseColor};">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div>
+                            <h3 style="margin-bottom:5px;">${typKey} – ${typ.name}</h3>
+                            <span class="klassen-badge" style="background:${klasseColor}22;color:${klasseColor};">${typ.klasse}</span>
+                        </div>
+                        <button class="favorit-btn ${isFavorit ? 'active' : ''}" onclick="toggleFavorit('${typKey}'); renderKlassenDetail();" title="Als Favorit markieren">
+                            ${isFavorit ? '★' : '☆'}
+                        </button>
+                    </div>
+                    <p style="margin-top:10px;">
+                        <span style="color:#888">${typ.stil}</span><br>
+                        <strong>Deck:</strong> ${typ.verteilung.join('/')} + ${typ.joker} Joker + ${typ.hand} Hand = ${total} Karten
+                    </p>
+                </div>
+            `;
+
+            // Wahrscheinlichkeitstabellen für alle 4 Symbole
+            const symbols = ['♠', '♦', '♥', '♣'];
+            const colors = ['#9b59b6', '#e67e22', '#e74c3c', '#27ae60'];
+            const names = ['Pik', 'Karo', 'Herz', 'Kreuz'];
+
+            html += '<div class="detail-grid">';
+
+            for (let i = 0; i < 4; i++) {
+                const count = typ.verteilung[i];
+                const matrix = erstelleMatrix(count, typ.joker, total);
+
+                html += `
+                    <div class="detail-card">
+                        <h3><span style="color:${colors[i]};font-size:1.3rem">${symbols[i]}</span> ${names[i]} (${count} Karten)</h3>
+                        <table class="prob-table"><thead><tr><th></th>`;
+
+                for (let j = 1; j <= 10; j++) {
+                    html += `<th>${j}</th>`;
+                }
+                html += '</tr></thead><tbody>';
+
+                for (let row = 0; row < 5; row++) {
+                    html += `<tr><td class="row-header">${row + 1}</td>`;
+                    for (let col = 0; col < 10; col++) {
+                        const value = matrix[row][col];
+                        const pct = Math.round(value * 100);
+                        const bg = getColor(value);
+                        const color = getTextColor(value);
+                        html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody></table></div>';
+            }
+
+            html += '</div>';
+
+            // Schnell-Referenz für alle Schwierigkeiten
+            html += `
+                <div class="section" style="margin-top:20px;background:#0f3460;">
+                    <h2>Schnell-Referenz nach Schwierigkeit</h2>
+                    <table class="prob-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                ${symbols.map((s, i) => `<th style="color:${colors[i]}">${s}</th>`).join('')}
+                                <th>Ø</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            for (const [diffKey, diff] of Object.entries(SCHWIERIGKEITEN)) {
+                html += `<tr><td class="row-header">${diff.name}</td>`;
+
+                let sum = 0;
+                for (let i = 0; i < 4; i++) {
+                    const prob = erfolgswahrscheinlichkeit(diff.ziehen, diff.benoetigt, typ.verteilung[i], typ.joker, total);
+                    sum += prob;
+                    const pct = Math.round(prob * 100);
+                    const bg = getColor(prob);
+                    const color = getTextColor(prob);
+                    html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                }
+
+                const avg = sum / 4;
+                const avgPct = Math.round(avg * 100);
+                const avgBg = getColor(avg);
+                const avgColor = getTextColor(avg);
+                html += `<td style="background:${avgBg};color:${avgColor};font-weight:bold;">${avgPct}%</td></tr>`;
+            }
+
+            html += '</tbody></table></div>';
+
+            container.innerHTML = html;
+        }
+
+        function updateDetailView() {
+            const select = document.getElementById('detail-player-select');
+            const container = document.getElementById('detail-content');
+            const playerId = parseInt(select.value);
+
+            if (!playerId) {
+                container.innerHTML = '<p class="no-players">Wähle einen Spieler aus der Liste oben.</p>';
+                return;
+            }
+
+            const player = gameData.spieler.find(p => p.id === playerId);
+            if (!player) {
+                container.innerHTML = '<p class="no-players">Spieler nicht gefunden.</p>';
+                return;
+            }
+
+            const deck = getPlayerDeck(player);
+            const isCustom = player.modus === 'custom';
+
+            let modusInfo;
+            if (isCustom) {
+                modusInfo = '<span style="color:#888">Benutzerdefiniert</span>';
+            } else {
+                const typData = CHARAKTER_TYPEN[player.typ];
+                const klasseColor = KLASSEN_FARBEN[typData.klasse];
+                modusInfo = `<strong>${player.typ} – ${typData.name}</strong>
+                    <span style="color:${klasseColor};font-size:0.85rem;padding:2px 6px;background:${klasseColor}22;border-radius:4px;margin-left:8px;">${typData.klasse}</span><br>
+                    <span style="color:#888;font-size:0.9rem">${typData.stil}</span>`;
+            }
+
+            let html = `
+                <div class="info-box">
+                    <h3>${player.name}</h3>
+                    <p style="margin-bottom:10px;">
+                        ${modusInfo}
+                    </p>
+                    <p>
+                        <strong>Deck:</strong>
+                        <span style="color:#9b59b6">♠ ${deck.pik}</span>,
+                        <span style="color:#e67e22">♦ ${deck.karo}</span>,
+                        <span style="color:#e74c3c">♥ ${deck.herz}</span>,
+                        <span style="color:#27ae60">♣ ${deck.kreuz}</span>,
+                        <span style="color:#f1c40f">🃏 ${deck.joker}</span>
+                        = ${deck.total} Karten
+                    </p>
+                </div>
+            `;
+
+            // Wahrscheinlichkeitstabellen pro Symbol
+            const symbols = [
+                { key: 'pik', icon: '♠', color: '#9b59b6', count: deck.pik },
+                { key: 'karo', icon: '♦', color: '#e67e22', count: deck.karo },
+                { key: 'herz', icon: '♥', color: '#e74c3c', count: deck.herz },
+                { key: 'kreuz', icon: '♣', color: '#27ae60', count: deck.kreuz }
+            ];
+
+            html += '<div class="detail-grid">';
+
+            for (const sym of symbols) {
+                const matrix = erstelleMatrix(sym.count, deck.joker, deck.total);
+                const attrIndex = symbols.indexOf(sym);
+                const attrName = gameData.attribute[attrIndex];
+
+                html += `
+                    <div class="detail-card">
+                        <h3><span style="color:${sym.color};font-size:1.3rem">${sym.icon}</span> ${attrName} (${sym.count} Karten)</h3>
+                        <table class="prob-table"><thead><tr><th></th>`;
+
+                for (let i = 1; i <= 10; i++) {
+                    html += `<th>${i}</th>`;
+                }
+                html += '</tr></thead><tbody>';
+
+                for (let row = 0; row < 5; row++) {
+                    html += `<tr><td class="row-header">${row + 1}</td>`;
+                    for (let col = 0; col < 10; col++) {
+                        const value = matrix[row][col];
+                        const pct = Math.round(value * 100);
+                        const bg = getColor(value);
+                        const color = getTextColor(value);
+                        html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                    }
+                    html += '</tr>';
+                }
+                html += '</tbody></table></div>';
+            }
+
+            html += '</div>';
+
+            // Farb-Proben
+            const rot = deck.karo + deck.herz;
+            const schwarz = deck.pik + deck.kreuz;
+
+            html += `
+                <div class="section" style="margin-top:20px;background:#0f3460;">
+                    <h2>Farb-Proben</h2>
+                    <p style="color:#888;font-size:0.9rem;margin-bottom:15px;">
+                        Rot (♦+♥): ${rot} Karten | Schwarz (♠+♣): ${schwarz} Karten
+                    </p>
+                    <div class="detail-grid">
+            `;
+
+            // Rot-Tabelle
+            const rotMatrix = erstelleMatrix(rot, deck.joker, deck.total);
+            html += `
+                <div class="detail-card">
+                    <h3><span style="color:#e74c3c;font-size:1.3rem">&#9829;</span><span style="color:#e67e22;font-size:1.3rem">&#9830;</span> Rot (${rot} Karten)</h3>
+                    <table class="prob-table"><thead><tr><th></th>`;
+            for (let i = 1; i <= 10; i++) html += `<th>${i}</th>`;
+            html += '</tr></thead><tbody>';
+            for (let row = 0; row < 5; row++) {
+                html += `<tr><td class="row-header">${row + 1}</td>`;
+                for (let col = 0; col < 10; col++) {
+                    const value = rotMatrix[row][col];
+                    const pct = Math.round(value * 100);
+                    const bg = getColor(value);
+                    const color = getTextColor(value);
+                    html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table></div>';
+
+            // Schwarz-Tabelle
+            const schwarzMatrix = erstelleMatrix(schwarz, deck.joker, deck.total);
+            html += `
+                <div class="detail-card">
+                    <h3><span style="color:#9b59b6;font-size:1.3rem">&#9824;</span><span style="color:#27ae60;font-size:1.3rem">&#9827;</span> Schwarz (${schwarz} Karten)</h3>
+                    <table class="prob-table"><thead><tr><th></th>`;
+            for (let i = 1; i <= 10; i++) html += `<th>${i}</th>`;
+            html += '</tr></thead><tbody>';
+            for (let row = 0; row < 5; row++) {
+                html += `<tr><td class="row-header">${row + 1}</td>`;
+                for (let col = 0; col < 10; col++) {
+                    const value = schwarzMatrix[row][col];
+                    const pct = Math.round(value * 100);
+                    const bg = getColor(value);
+                    const color = getTextColor(value);
+                    html += `<td style="background:${bg};color:${color}">${pct}%</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table></div></div></div>';
+
+            container.innerHTML = html;
+        }
+
+        // ========================================
+        // EXPORT / IMPORT
+        // ========================================
+
+        function exportGame() {
+            const data = JSON.stringify(gameData, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = (gameData.spielName || 'spiel') + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showStatus('Spiel exportiert!', 'success');
+        }
+
+        function importGame(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // Validierung
+                    if (!data.attribute || !Array.isArray(data.spieler)) {
+                        throw new Error('Ungültiges Format');
+                    }
+
+                    // Migration: Alte Daten um neue Felder ergänzen
+                    if (!data.favoriten) {
+                        data.favoriten = [];
+                    }
+                    for (const player of data.spieler) {
+                        if (!player.modus) {
+                            player.modus = 'typ';  // Legacy = Typ-Modus
+                        }
+                        if (!player.deck) {
+                            player.deck = { pik: 5, karo: 5, herz: 5, kreuz: 5, joker: 0 };
+                        }
+                        if (!player.zuordnung) {
+                            player.zuordnung = [0, 1, 2, 3];
+                        }
+                    }
+
+                    gameData = data;
+
+                    // NextPlayerId anpassen
+                    if (gameData.spieler.length > 0) {
+                        nextPlayerId = Math.max(...gameData.spieler.map(p => p.id)) + 1;
+                    }
+
+                    // UI aktualisieren
+                    document.getElementById('spiel-name').value = gameData.spielName || '';
+                    for (let i = 0; i < 4; i++) {
+                        document.getElementById(`attr-${i}`).value = gameData.attribute[i] || '';
+                    }
+
+                    renderAll();
+                    showStatus('Spiel importiert!', 'success');
+                } catch (err) {
+                    showStatus('Fehler beim Import: ' + err.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+
+            // Input zurücksetzen
+            event.target.value = '';
+        }
+
+        function showStatus(message, type) {
+            const el = document.getElementById('status-message');
+            el.textContent = message;
+            el.className = 'status-msg ' + type;
+
+            setTimeout(() => {
+                el.className = 'status-msg';
+            }, 3000);
+        }
+
+        // ========================================
+        // NAVIGATION & HILFSFUNKTIONEN
+        // ========================================
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Tab-spezifische Updates
+            if (tabName === 'klassen') {
+                renderKlassenOverview();
+                renderKlassenDetailSelect();
+            } else if (tabName === 'uebersicht') {
+                renderAvgGrid();
+                renderQuickRef();
+            } else if (tabName === 'detail') {
+                renderDetailPlayerSelect();
+            }
+        }
+
+        function updateGameName() {
+            gameData.spielName = document.getElementById('spiel-name').value;
+        }
+
+        function updateAttributes() {
+            for (let i = 0; i < 4; i++) {
+                gameData.attribute[i] = document.getElementById(`attr-${i}`).value;
+            }
+            renderAll();
+        }
+
+        function renderAll() {
+            renderPlayerList();
+            renderSetupPlayerList();
+            renderKlassenOverview();
+            renderKlassenDetailSelect();
+            renderAvgGrid();
+            renderQuickRef();
+            renderDetailPlayerSelect();
+        }
+
+        // ========================================
+        // INITIALISIERUNG
+        // ========================================
+
+        renderTypeInfo();
+        renderBaselineTable();
+        renderAll();
+    </script>
+</body>
+</html>
