@@ -356,9 +356,22 @@
                 <input type="range" id="joker" min="0" max="4" value="0">
             </div>
 
+            <h2 style="margin-top: 20px;">Handkarten</h2>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span>🎴 Auf der Hand</span>
+                    <span class="value" id="hand-value">0</span>
+                </div>
+                <input type="range" id="hand" min="0" max="10" value="0">
+            </div>
+
             <div class="deck-info">
                 <div class="total" id="deck-total">20</div>
                 <div class="label">Karten im Deck</div>
+                <div id="hand-info" style="margin-top: 8px; font-size: 0.9rem; color: #888; display: none;">
+                    <span id="hand-display">0</span> auf der Hand
+                </div>
             </div>
 
             <div class="mode-toggle">
@@ -471,12 +484,14 @@
         }
 
         // Matrix erstellen
-        function erstelleMatrix(symbolCount, jokerCount, totalDeck) {
+        function erstelleMatrix(symbolCount, jokerCount, totalDeck, handkarten = 0) {
             const matrix = [];
             for (let benoetigt = 1; benoetigt <= MAX_REQUIRED; benoetigt++) {
                 const row = [];
                 for (let gezogen = 1; gezogen <= MAX_DRAW; gezogen++) {
-                    row.push(erfolgswahrscheinlichkeit(gezogen, benoetigt, symbolCount, jokerCount, totalDeck));
+                    // Handkarten + gezogene Karten = effektiv verfügbare Karten
+                    const effektivGezogen = gezogen + handkarten;
+                    row.push(erfolgswahrscheinlichkeit(effektivGezogen, benoetigt, symbolCount, jokerCount, totalDeck));
                 }
                 matrix.push(row);
             }
@@ -615,7 +630,9 @@
             }
 
             html += '</tbody></table>';
-            html += '<div class="axis-label">Gezogene Karten →</div>';
+            const hand = parseInt(document.getElementById('hand').value);
+            const axisLabel = hand > 0 ? `Zusätzlich gezogen (+ ${hand} Hand) →` : 'Gezogene Karten →';
+            html += `<div class="axis-label">${axisLabel}</div>`;
 
             container.innerHTML = html;
         }
@@ -680,6 +697,7 @@
             const pik = parseInt(document.getElementById('pik').value);
             const kreuz = parseInt(document.getElementById('kreuz').value);
             const joker = parseInt(document.getElementById('joker').value);
+            const hand = parseInt(document.getElementById('hand').value);
 
             const totalDeck = herz + karo + pik + kreuz + joker;
 
@@ -689,7 +707,17 @@
             document.getElementById('pik-value').textContent = pik;
             document.getElementById('kreuz-value').textContent = kreuz;
             document.getElementById('joker-value').textContent = joker;
+            document.getElementById('hand-value').textContent = hand;
             document.getElementById('deck-total').textContent = totalDeck;
+
+            // Handkarten-Info anzeigen/verstecken
+            const handInfo = document.getElementById('hand-info');
+            if (hand > 0) {
+                handInfo.style.display = 'block';
+                document.getElementById('hand-display').textContent = hand;
+            } else {
+                handInfo.style.display = 'none';
+            }
 
             // Badges
             updateBadge('herz', herz);
@@ -697,12 +725,12 @@
             updateBadge('pik', pik);
             updateBadge('kreuz', kreuz);
 
-            // Matrizen berechnen
+            // Matrizen berechnen (mit Handkarten)
             const matrices = {
-                herz: erstelleMatrix(herz, joker, totalDeck),
-                karo: erstelleMatrix(karo, joker, totalDeck),
-                pik: erstelleMatrix(pik, joker, totalDeck),
-                kreuz: erstelleMatrix(kreuz, joker, totalDeck)
+                herz: erstelleMatrix(herz, joker, totalDeck, hand),
+                karo: erstelleMatrix(karo, joker, totalDeck, hand),
+                pik: erstelleMatrix(pik, joker, totalDeck, hand),
+                kreuz: erstelleMatrix(kreuz, joker, totalDeck, hand)
             };
 
             // Heatmaps rendern
@@ -729,11 +757,12 @@
             document.getElementById('pik').value = 5;
             document.getElementById('kreuz').value = 5;
             document.getElementById('joker').value = 0;
+            document.getElementById('hand').value = 0;
             updateAll();
         }
 
         // Event Listener
-        ['herz', 'karo', 'pik', 'kreuz', 'joker'].forEach(id => {
+        ['herz', 'karo', 'pik', 'kreuz', 'joker', 'hand'].forEach(id => {
             document.getElementById(id).addEventListener('input', updateAll);
         });
 
