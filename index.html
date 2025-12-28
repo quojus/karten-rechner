@@ -306,12 +306,366 @@
         .reset-btn:hover {
             background: #444;
         }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: #16213e;
+            border: none;
+            border-radius: 8px;
+            color: #888;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: #4a90d9;
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Designer Styles */
+        .designer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .designer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .designer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .designer-section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .designer-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .range-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .range-input-group label {
+            min-width: 80px;
+            font-size: 0.9rem;
+        }
+
+        .range-input-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .range-input-group input[type="number"] {
+            width: 60px;
+            padding: 6px;
+            background: #0f3460;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .range-input-group .range-separator {
+            color: #888;
+        }
+
+        .symbol-target-group {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .symbol-target-group h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .target-slider {
+            margin-bottom: 10px;
+        }
+
+        .target-slider label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+
+        .target-slider input[type="range"] {
+            width: 100%;
+        }
+
+        .sum-indicator {
+            text-align: right;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #333;
+        }
+
+        .sum-indicator.valid { color: #27ae60; }
+        .sum-indicator.invalid { color: #e74c3c; }
+
+        .optimize-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: #4a90d9;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .optimize-btn:hover {
+            background: #5a9fe9;
+        }
+
+        .optimize-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+
+        .result-section {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .result-deck {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: #0f3460;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+
+        .result-card .label {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .result-comparison {
+            margin-top: 15px;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 80px 80px;
+            gap: 10px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+            font-size: 0.85rem;
+        }
+
+        .comparison-bar {
+            height: 20px;
+            background: #0f3460;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .comparison-bar .target {
+            position: absolute;
+            height: 100%;
+            background: #4a90d9;
+            opacity: 0.5;
+        }
+
+        .comparison-bar .actual {
+            position: absolute;
+            height: 100%;
+            background: #27ae60;
+            width: 3px;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+        /* Spieler-System */
+        .player-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .player-tab {
+            padding: 8px 16px;
+            background: #0f3460;
+            border: none;
+            border-radius: 6px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .player-tab:hover {
+            color: #fff;
+        }
+
+        .player-tab.active {
+            background: #4a90d9;
+            color: #fff;
+        }
+
+        .player-tab .remove-btn {
+            margin-left: 8px;
+            opacity: 0.6;
+        }
+
+        .player-tab .remove-btn:hover {
+            opacity: 1;
+        }
+
+        .add-player-btn {
+            padding: 8px 12px;
+            background: #27ae60;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .add-player-btn:hover {
+            background: #2ecc71;
+        }
+
+        .add-player-btn:disabled {
+            background: #333;
+            cursor: not-allowed;
+        }
+
+        .player-content {
+            display: none;
+        }
+
+        .player-content.active {
+            display: block;
+        }
+
+        .global-params {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .global-params h3 {
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        .global-params-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .symbols-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .player-name-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed #888;
+            color: #fff;
+            font-size: 0.9rem;
+            width: 100px;
+            padding: 2px;
+        }
+
+        .player-name-input:focus {
+            outline: none;
+            border-bottom-color: #4a90d9;
+        }
     </style>
 </head>
 <body>
     <h1>🃏 P&P Karten-Wahrscheinlichkeitsrechner</h1>
     <p class="subtitle">Berechne Erfolgswahrscheinlichkeiten für dein kartenbasiertes Pen-and-Paper System</p>
 
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('rechner')">🎲 Rechner</button>
+        <button class="tab-btn" onclick="switchTab('designer')">🎨 Deck Designer</button>
+    </div>
+
+    <div id="tab-rechner" class="tab-content active">
     <div class="container">
         <div class="sidebar">
             <h2>Spieler-Deck</h2>
@@ -422,6 +776,89 @@
             </div>
         </div>
     </div>
+    </div><!-- Ende tab-rechner -->
+
+    <div id="tab-designer" class="tab-content">
+        <div class="designer-container">
+            <!-- Globale Parameter -->
+            <div class="designer-section">
+                <h2>🔧 Globale Einstellungen</h2>
+                <p style="color: #888; font-size: 0.85rem; margin-bottom: 15px;">
+                    Diese Werte gelten für alle Spieler.
+                </p>
+
+                <div class="global-params">
+                    <h3>📏 Deck-Grenzen (Rommé-Blatt)</h3>
+                    <div class="global-params-grid">
+                        <div class="range-input-group">
+                            <label><span class="symbol-icon herz">♥</span> Herz</label>
+                            <input type="number" id="global-herz-min" min="0" max="26" value="0" style="width:50px">
+                            <span class="range-separator">–</span>
+                            <input type="number" id="global-herz-max" min="0" max="26" value="13" style="width:50px">
+                        </div>
+                        <div class="range-input-group">
+                            <label><span class="symbol-icon karo">♦</span> Karo</label>
+                            <input type="number" id="global-karo-min" min="0" max="26" value="0" style="width:50px">
+                            <span class="range-separator">–</span>
+                            <input type="number" id="global-karo-max" min="0" max="26" value="13" style="width:50px">
+                        </div>
+                        <div class="range-input-group">
+                            <label><span class="symbol-icon pik">♠</span> Pik</label>
+                            <input type="number" id="global-pik-min" min="0" max="26" value="0" style="width:50px">
+                            <span class="range-separator">–</span>
+                            <input type="number" id="global-pik-max" min="0" max="26" value="13" style="width:50px">
+                        </div>
+                        <div class="range-input-group">
+                            <label><span class="symbol-icon kreuz">♣</span> Kreuz</label>
+                            <input type="number" id="global-kreuz-min" min="0" max="26" value="0" style="width:50px">
+                            <span class="range-separator">–</span>
+                            <input type="number" id="global-kreuz-max" min="0" max="26" value="13" style="width:50px">
+                        </div>
+                        <div class="range-input-group">
+                            <label><span class="symbol-icon joker">🃏</span> Joker</label>
+                            <input type="number" id="global-joker-min" min="0" max="6" value="0" style="width:50px">
+                            <span class="range-separator">–</span>
+                            <input type="number" id="global-joker-max" min="0" max="6" value="3" style="width:50px">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="global-params">
+                    <h3>🎲 Spielregeln (für alle Spieler gleich)</h3>
+                    <div class="global-params-grid">
+                        <div class="range-input-group">
+                            <label>🎴 Karten ziehen</label>
+                            <input type="number" id="global-ziehen" min="1" max="10" value="5" style="width:60px">
+                        </div>
+                        <div class="range-input-group">
+                            <label>🎯 Symbole benötigt</label>
+                            <input type="number" id="global-benoetigt" min="1" max="5" value="2" style="width:60px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spieler-Bereich -->
+            <div class="designer-section" style="margin-top: 20px;">
+                <h2>👥 Spieler</h2>
+
+                <div class="player-tabs" id="player-tabs">
+                    <!-- Dynamisch gefüllt -->
+                </div>
+
+                <div id="player-contents">
+                    <!-- Dynamisch gefüllt -->
+                </div>
+            </div>
+
+            <button class="optimize-btn" onclick="optimizeAllDecks()">🔍 Optimale Decks für alle Spieler finden</button>
+
+            <div id="result-section" class="result-section" style="display: none;">
+                <h2>📊 Ergebnisse</h2>
+                <div id="result-content"></div>
+            </div>
+        </div>
+    </div><!-- Ende tab-designer -->
 
     <script>
         // Konfiguration
@@ -769,6 +1206,416 @@
         // Initialisierung
         berechneBaseline();
         updateAll();
+
+        // ========================================
+        // DECK DESIGNER FUNKTIONEN (MEHRSPIELER)
+        // ========================================
+
+        // Spieler-Daten
+        let players = [];
+        let activePlayerId = null;
+        let nextPlayerId = 1;
+        const MAX_PLAYERS = 6;
+        const MIN_PLAYERS = 2;
+
+        // Tab-Wechsel
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Spieler hinzufügen
+        function addPlayer(name = null) {
+            if (players.length >= MAX_PLAYERS) return;
+
+            const id = nextPlayerId++;
+            const playerName = name || `Spieler ${id}`;
+
+            players.push({
+                id,
+                name: playerName,
+                targets: {
+                    herz: [10, 20, 50, 20],
+                    karo: [10, 20, 50, 20],
+                    pik: [10, 20, 50, 20],
+                    kreuz: [10, 20, 50, 20]
+                }
+            });
+
+            renderPlayerTabs();
+            switchToPlayer(id);
+        }
+
+        // Spieler entfernen
+        function removePlayer(id) {
+            if (players.length <= MIN_PLAYERS) return;
+
+            players = players.filter(p => p.id !== id);
+
+            if (activePlayerId === id) {
+                activePlayerId = players[0]?.id || null;
+            }
+
+            renderPlayerTabs();
+            if (activePlayerId) switchToPlayer(activePlayerId);
+        }
+
+        // Zu Spieler wechseln
+        function switchToPlayer(id) {
+            activePlayerId = id;
+
+            document.querySelectorAll('.player-tab').forEach(tab => {
+                tab.classList.toggle('active', parseInt(tab.dataset.id) === id);
+            });
+
+            document.querySelectorAll('.player-content').forEach(content => {
+                content.classList.toggle('active', parseInt(content.dataset.id) === id);
+            });
+        }
+
+        // Spieler-Tabs rendern
+        function renderPlayerTabs() {
+            const tabsContainer = document.getElementById('player-tabs');
+            const contentsContainer = document.getElementById('player-contents');
+
+            let tabsHtml = '';
+            let contentsHtml = '';
+
+            for (const player of players) {
+                // Tab
+                tabsHtml += `
+                    <button class="player-tab ${player.id === activePlayerId ? 'active' : ''}"
+                            data-id="${player.id}"
+                            onclick="switchToPlayer(${player.id})">
+                        <input type="text" class="player-name-input"
+                               value="${player.name}"
+                               onclick="event.stopPropagation()"
+                               onchange="updatePlayerName(${player.id}, this.value)">
+                        ${players.length > MIN_PLAYERS ?
+                            `<span class="remove-btn" onclick="event.stopPropagation(); removePlayer(${player.id})">✕</span>` : ''}
+                    </button>
+                `;
+
+                // Content
+                contentsHtml += `
+                    <div class="player-content ${player.id === activePlayerId ? 'active' : ''}" data-id="${player.id}">
+                        <p style="color: #888; font-size: 0.85rem; margin-bottom: 15px;">
+                            Ziel-Wahrscheinlichkeiten für <strong>${player.name}</strong>
+                        </p>
+                        <div class="symbols-grid">
+                            ${renderSymbolTargets(player.id, 'herz', '♥', '#e74c3c')}
+                            ${renderSymbolTargets(player.id, 'karo', '♦', '#e67e22')}
+                            ${renderSymbolTargets(player.id, 'pik', '♠', '#9b59b6')}
+                            ${renderSymbolTargets(player.id, 'kreuz', '♣', '#27ae60')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add-Button
+            if (players.length < MAX_PLAYERS) {
+                tabsHtml += `<button class="add-player-btn" onclick="addPlayer()">+ Spieler</button>`;
+            }
+
+            tabsContainer.innerHTML = tabsHtml;
+            contentsContainer.innerHTML = contentsHtml;
+        }
+
+        // Symbol-Slider für einen Spieler rendern
+        function renderSymbolTargets(playerId, symbol, icon, color) {
+            const player = players.find(p => p.id === playerId);
+            const vals = player.targets[symbol];
+
+            return `
+                <div class="symbol-target-group">
+                    <h3><span style="color: ${color}; font-size: 1.2rem;">${icon}</span> ${symbol.charAt(0).toUpperCase() + symbol.slice(1)}</h3>
+                    <div class="target-slider">
+                        <label><span>💀 Versagen</span><span id="val-${playerId}-${symbol}-0">${vals[0]}%</span></label>
+                        <input type="range" id="slider-${playerId}-${symbol}-0" min="0" max="100" value="${vals[0]}"
+                               oninput="updatePlayerTarget(${playerId}, '${symbol}', 0, this.value)">
+                    </div>
+                    <div class="target-slider">
+                        <label><span>😓 Missgeschick</span><span id="val-${playerId}-${symbol}-1">${vals[1]}%</span></label>
+                        <input type="range" id="slider-${playerId}-${symbol}-1" min="0" max="100" value="${vals[1]}"
+                               oninput="updatePlayerTarget(${playerId}, '${symbol}', 1, this.value)">
+                    </div>
+                    <div class="target-slider">
+                        <label><span>✓ Gemeistert</span><span id="val-${playerId}-${symbol}-2">${vals[2]}%</span></label>
+                        <input type="range" id="slider-${playerId}-${symbol}-2" min="0" max="100" value="${vals[2]}"
+                               oninput="updatePlayerTarget(${playerId}, '${symbol}', 2, this.value)">
+                    </div>
+                    <div class="target-slider">
+                        <label><span>⭐ Hervorragend</span><span id="val-${playerId}-${symbol}-3">${vals[3]}%</span></label>
+                        <input type="range" id="slider-${playerId}-${symbol}-3" min="0" max="100" value="${vals[3]}"
+                               oninput="updatePlayerTarget(${playerId}, '${symbol}', 3, this.value)">
+                    </div>
+                    <div class="sum-indicator" id="sum-${playerId}-${symbol}">Σ = ${vals.reduce((a,b) => a+b, 0)}%</div>
+                </div>
+            `;
+        }
+
+        // Spieler-Name aktualisieren
+        function updatePlayerName(id, name) {
+            const player = players.find(p => p.id === id);
+            if (player) player.name = name;
+        }
+
+        // Spieler-Zielwert aktualisieren
+        function updatePlayerTarget(playerId, symbol, index, value) {
+            const player = players.find(p => p.id === playerId);
+            if (!player) return;
+
+            player.targets[symbol][index] = parseInt(value);
+
+            // Anzeige aktualisieren
+            document.getElementById(`val-${playerId}-${symbol}-${index}`).textContent = value + '%';
+
+            // Summe prüfen
+            const sum = player.targets[symbol].reduce((a, b) => a + b, 0);
+            const sumEl = document.getElementById(`sum-${playerId}-${symbol}`);
+            if (sum === 100) {
+                sumEl.textContent = 'Σ = 100% ✓';
+                sumEl.className = 'sum-indicator valid';
+            } else {
+                sumEl.textContent = `Σ = ${sum}%`;
+                sumEl.className = 'sum-indicator invalid';
+            }
+        }
+
+        // Globale Parameter auslesen
+        function getGlobalParams() {
+            return {
+                herz: {
+                    min: parseInt(document.getElementById('global-herz-min').value),
+                    max: parseInt(document.getElementById('global-herz-max').value)
+                },
+                karo: {
+                    min: parseInt(document.getElementById('global-karo-min').value),
+                    max: parseInt(document.getElementById('global-karo-max').value)
+                },
+                pik: {
+                    min: parseInt(document.getElementById('global-pik-min').value),
+                    max: parseInt(document.getElementById('global-pik-max').value)
+                },
+                kreuz: {
+                    min: parseInt(document.getElementById('global-kreuz-min').value),
+                    max: parseInt(document.getElementById('global-kreuz-max').value)
+                },
+                joker: {
+                    min: parseInt(document.getElementById('global-joker-min').value),
+                    max: parseInt(document.getElementById('global-joker-max').value)
+                },
+                ziehen: parseInt(document.getElementById('global-ziehen').value),
+                benoetigt: parseInt(document.getElementById('global-benoetigt').value)
+            };
+        }
+
+        // Wahrscheinlichkeitsverteilung berechnen
+        function berechneSymbolVerteilung(symbolCount, jokerCount, totalDeck, gezogen, benoetigt) {
+            const andereCount = totalDeck - symbolCount - jokerCount;
+
+            function pGenauK(k) {
+                let prob = 0;
+                for (let s = 0; s <= Math.min(symbolCount, k); s++) {
+                    const j = k - s;
+                    if (j >= 0 && j <= jokerCount) {
+                        prob += multivariateHypergeomPMF(gezogen, s, j, symbolCount, jokerCount, andereCount);
+                    }
+                }
+                return prob;
+            }
+
+            const versagen = pGenauK(0);
+            let missgeschick = 0;
+            for (let k = 1; k < benoetigt; k++) missgeschick += pGenauK(k);
+            const gemeistert = pGenauK(benoetigt);
+            let hervorragend = 0;
+            for (let k = benoetigt + 1; k <= gezogen; k++) hervorragend += pGenauK(k);
+
+            return [versagen, missgeschick, gemeistert, hervorragend];
+        }
+
+        // Abweichung berechnen
+        function berechneAbweichung(ziel, erreicht) {
+            let summe = 0;
+            for (let i = 0; i < 4; i++) {
+                summe += Math.pow(ziel[i] - erreicht[i], 2);
+            }
+            return Math.sqrt(summe);
+        }
+
+        // Deck für einen Spieler bewerten
+        function bewerteDeckFuerSpieler(deck, playerTargets, gezogen, benoetigt) {
+            const totalDeck = deck.herz + deck.karo + deck.pik + deck.kreuz + deck.joker;
+            if (totalDeck < gezogen) return Infinity;
+
+            let abweichung = 0;
+            for (const symbol of ['herz', 'karo', 'pik', 'kreuz']) {
+                const erreicht = berechneSymbolVerteilung(
+                    deck[symbol], deck.joker, totalDeck, gezogen, benoetigt
+                );
+                const ziel = playerTargets[symbol].map(v => v / 100);
+                abweichung += berechneAbweichung(ziel, erreicht);
+            }
+            return abweichung;
+        }
+
+        // Optimales Deck für einen Spieler finden
+        function optimizeDeckForPlayer(player, params) {
+            const maxIterationen = 50000;
+            let bestesDeck = null;
+            let besteAbweichung = Infinity;
+
+            const ranges = {
+                herz: params.herz.max - params.herz.min + 1,
+                karo: params.karo.max - params.karo.min + 1,
+                pik: params.pik.max - params.pik.min + 1,
+                kreuz: params.kreuz.max - params.kreuz.min + 1,
+                joker: params.joker.max - params.joker.min + 1
+            };
+
+            // Random Sampling
+            for (let i = 0; i < maxIterationen; i++) {
+                const deck = {
+                    herz: params.herz.min + Math.floor(Math.random() * ranges.herz),
+                    karo: params.karo.min + Math.floor(Math.random() * ranges.karo),
+                    pik: params.pik.min + Math.floor(Math.random() * ranges.pik),
+                    kreuz: params.kreuz.min + Math.floor(Math.random() * ranges.kreuz),
+                    joker: params.joker.min + Math.floor(Math.random() * ranges.joker)
+                };
+
+                const abweichung = bewerteDeckFuerSpieler(deck, player.targets, params.ziehen, params.benoetigt);
+                if (abweichung < besteAbweichung) {
+                    besteAbweichung = abweichung;
+                    bestesDeck = {...deck};
+                }
+            }
+
+            return { deck: bestesDeck, abweichung: besteAbweichung };
+        }
+
+        // Alle Decks optimieren
+        function optimizeAllDecks() {
+            const resultSection = document.getElementById('result-section');
+            const resultContent = document.getElementById('result-content');
+
+            resultSection.style.display = 'block';
+            resultContent.innerHTML = '<div class="progress-indicator">🔍 Optimiere Decks für alle Spieler...</div>';
+
+            setTimeout(() => {
+                const params = getGlobalParams();
+                const results = [];
+
+                for (const player of players) {
+                    const result = optimizeDeckForPlayer(player, params);
+                    results.push({
+                        player,
+                        deck: result.deck,
+                        abweichung: result.abweichung
+                    });
+                }
+
+                zeigeAlleErgebnisse(results, params);
+            }, 50);
+        }
+
+        // Alle Ergebnisse anzeigen
+        function zeigeAlleErgebnisse(results, params) {
+            const resultContent = document.getElementById('result-content');
+            let html = `
+                <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">
+                    Regeln: ${params.ziehen} Karten ziehen, ${params.benoetigt} Symbole benötigt
+                </p>
+            `;
+
+            const symbolNames = {herz: '♥', karo: '♦', pik: '♠', kreuz: '♣'};
+            const kategorien = ['💀 Versagen', '😓 Missgeschick', '✓ Gemeistert', '⭐ Hervorragend'];
+
+            for (const result of results) {
+                const deck = result.deck;
+                const totalDeck = deck.herz + deck.karo + deck.pik + deck.kreuz + deck.joker;
+
+                html += `
+                    <div style="background: #0f3460; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h3 style="margin-bottom: 15px;">${result.player.name}</h3>
+
+                        <div class="result-deck">
+                            <div class="result-card">
+                                <div class="value" style="color: #e74c3c;">♥ ${deck.herz}</div>
+                                <div class="label">Herz</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="value" style="color: #e67e22;">♦ ${deck.karo}</div>
+                                <div class="label">Karo</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="value" style="color: #9b59b6;">♠ ${deck.pik}</div>
+                                <div class="label">Pik</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="value" style="color: #27ae60;">♣ ${deck.kreuz}</div>
+                                <div class="label">Kreuz</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="value" style="color: #f1c40f;">🃏 ${deck.joker}</div>
+                                <div class="label">Joker</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="value">${totalDeck}</div>
+                                <div class="label">Gesamt</div>
+                            </div>
+                        </div>
+
+                        <p style="color: #888; font-size: 0.8rem; margin: 10px 0;">
+                            Abweichung: ${(result.abweichung * 100).toFixed(1)}%
+                        </p>
+
+                        <details style="margin-top: 10px;">
+                            <summary style="cursor: pointer; color: #4a90d9;">Details anzeigen</summary>
+                            <div style="margin-top: 10px;">
+                `;
+
+                for (const symbol of ['herz', 'karo', 'pik', 'kreuz']) {
+                    const erreicht = berechneSymbolVerteilung(
+                        deck[symbol], deck.joker, totalDeck, params.ziehen, params.benoetigt
+                    );
+                    const ziel = result.player.targets[symbol];
+
+                    html += `<div style="margin-bottom: 10px;"><strong>${symbolNames[symbol]} ${symbol.charAt(0).toUpperCase() + symbol.slice(1)}</strong><div class="result-comparison">`;
+
+                    for (let i = 0; i < 4; i++) {
+                        const zielVal = ziel[i];
+                        const istVal = Math.round(erreicht[i] * 100);
+                        const diff = istVal - zielVal;
+                        const diffStr = diff >= 0 ? `+${diff}` : `${diff}`;
+                        const diffColor = Math.abs(diff) <= 5 ? '#27ae60' : (Math.abs(diff) <= 10 ? '#f39c12' : '#e74c3c');
+
+                        html += `
+                            <div class="comparison-row">
+                                <span>${kategorien[i]}</span>
+                                <div class="comparison-bar">
+                                    <div class="target" style="width: ${zielVal}%"></div>
+                                    <div class="actual" style="left: ${istVal}%"></div>
+                                </div>
+                                <span>${zielVal}%</span>
+                                <span style="color: ${diffColor}">${istVal}% (${diffStr})</span>
+                            </div>
+                        `;
+                    }
+                    html += `</div></div>`;
+                }
+
+                html += `</div></details></div>`;
+            }
+
+            resultContent.innerHTML = html;
+        }
+
+        // Initialisierung: 2 Spieler erstellen
+        addPlayer('Spieler 1');
+        addPlayer('Spieler 2');
     </script>
 </body>
 </html>
