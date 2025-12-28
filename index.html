@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&P Karten-Wahrscheinlichkeitsrechner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1000px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 18px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .control-label span {
+            font-size: 0.95rem;
+        }
+
+        .control-label .value {
+            background: #0f3460;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .symbol-icon {
+            font-size: 1.2rem;
+            margin-right: 6px;
+        }
+
+        .symbol-icon.herz { color: #e74c3c; }
+        .symbol-icon.karo { color: #e67e22; }
+        .symbol-icon.pik { color: #9b59b6; }
+        .symbol-icon.kreuz { color: #27ae60; }
+        .symbol-icon.joker { color: #f1c40f; }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #0f3460;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4a90d9;
+            cursor: pointer;
+        }
+
+        .deck-info {
+            background: #0f3460;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .deck-info .total {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a90d9;
+        }
+
+        .deck-info .label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 4px;
+            margin-top: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: #4a90d9;
+            color: #fff;
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 800px) {
+            .heatmap-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .heatmap-container {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .heatmap-title {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .heatmap-title .diff-badge {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #333;
+        }
+
+        .heatmap-title .diff-badge.positive { background: #1a5276; color: #85c1e9; }
+        .heatmap-title .diff-badge.negative { background: #7b241c; color: #f5b7b1; }
+
+        .heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+
+        .heatmap-table th {
+            padding: 6px 4px;
+            color: #888;
+            font-weight: normal;
+        }
+
+        .heatmap-table td {
+            text-align: center;
+            padding: 4px 2px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .heatmap-table .row-header {
+            color: #888;
+            font-weight: normal;
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .axis-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .y-axis-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* Legend */
+        .legend {
+            background: #16213e;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .legend-gradient {
+            width: 150px;
+            height: 15px;
+            border-radius: 4px;
+        }
+
+        .legend-gradient.absolut {
+            background: linear-gradient(to right, #fff, #d73027, #f46d43, #fee08b, #a6d96a, #1a9850);
+        }
+
+        .legend-gradient.differenz {
+            background: linear-gradient(to right, #b2182b, #ef8a62, #f7f7f7, #67a9cf, #2166ac);
+        }
+
+        .legend-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #888;
+            width: 150px;
+        }
+
+        /* Reset Button */
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background: #333;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>🃏 P&P Karten-Wahrscheinlichkeitsrechner</h1>
+    <p class="subtitle">Berechne Erfolgswahrscheinlichkeiten für dein kartenbasiertes Pen-and-Paper System</p>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Spieler-Deck</h2>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span><span class="symbol-icon herz">♥</span> Herz</span>
+                    <span class="value" id="herz-value">5</span>
+                </div>
+                <input type="range" id="herz" min="0" max="10" value="5">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span><span class="symbol-icon karo">♦</span> Karo</span>
+                    <span class="value" id="karo-value">5</span>
+                </div>
+                <input type="range" id="karo" min="0" max="10" value="5">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span><span class="symbol-icon pik">♠</span> Pik</span>
+                    <span class="value" id="pik-value">5</span>
+                </div>
+                <input type="range" id="pik" min="0" max="10" value="5">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span><span class="symbol-icon kreuz">♣</span> Kreuz</span>
+                    <span class="value" id="kreuz-value">5</span>
+                </div>
+                <input type="range" id="kreuz" min="0" max="10" value="5">
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">
+                    <span><span class="symbol-icon joker">🃏</span> Joker</span>
+                    <span class="value" id="joker-value">0</span>
+                </div>
+                <input type="range" id="joker" min="0" max="4" value="0">
+            </div>
+
+            <div class="deck-info">
+                <div class="total" id="deck-total">20</div>
+                <div class="label">Karten im Deck</div>
+            </div>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="mode-absolut" onclick="setMode('absolut')">Absolut</button>
+                <button class="mode-btn" id="mode-differenz" onclick="setMode('differenz')">Differenz</button>
+            </div>
+
+            <button class="reset-btn" onclick="resetToDefault()">↺ Zurücksetzen</button>
+        </div>
+
+        <div class="main-content">
+            <div class="legend" id="legend">
+                <!-- Filled by JS -->
+            </div>
+
+            <div class="heatmap-grid">
+                <div class="heatmap-container">
+                    <div class="heatmap-title">
+                        <span class="symbol-icon herz">♥</span> Herz
+                        <span class="diff-badge" id="herz-badge"></span>
+                    </div>
+                    <div id="heatmap-herz"></div>
+                </div>
+
+                <div class="heatmap-container">
+                    <div class="heatmap-title">
+                        <span class="symbol-icon karo">♦</span> Karo
+                        <span class="diff-badge" id="karo-badge"></span>
+                    </div>
+                    <div id="heatmap-karo"></div>
+                </div>
+
+                <div class="heatmap-container">
+                    <div class="heatmap-title">
+                        <span class="symbol-icon pik">♠</span> Pik
+                        <span class="diff-badge" id="pik-badge"></span>
+                    </div>
+                    <div id="heatmap-pik"></div>
+                </div>
+
+                <div class="heatmap-container">
+                    <div class="heatmap-title">
+                        <span class="symbol-icon kreuz">♣</span> Kreuz
+                        <span class="diff-badge" id="kreuz-badge"></span>
+                    </div>
+                    <div id="heatmap-kreuz"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Konfiguration
+        const MAX_DRAW = 10;
+        const MAX_REQUIRED = 5;
+        const BASELINE = { herz: 5, karo: 5, pik: 5, kreuz: 5, joker: 0 };
+
+        let currentMode = 'absolut';
+        let baselineMatrix = {};
+
+        // Binomialkoeffizient berechnen
+        function binomial(n, k) {
+            if (k < 0 || k > n) return 0;
+            if (k === 0 || k === n) return 1;
+
+            let result = 1;
+            for (let i = 0; i < k; i++) {
+                result = result * (n - i) / (i + 1);
+            }
+            return Math.round(result);
+        }
+
+        // Multivariate hypergeometrische PMF
+        function multivariateHypergeomPMF(gezogen, symbolGezogen, jokerGezogen,
+                                           symbolCount, jokerCount, andereCount) {
+            const andereGezogen = gezogen - symbolGezogen - jokerGezogen;
+
+            if (andereGezogen < 0 || andereGezogen > andereCount) return 0;
+            if (symbolGezogen < 0 || symbolGezogen > symbolCount) return 0;
+            if (jokerGezogen < 0 || jokerGezogen > jokerCount) return 0;
+
+            const total = symbolCount + jokerCount + andereCount;
+
+            const zaehler = binomial(symbolCount, symbolGezogen) *
+                           binomial(jokerCount, jokerGezogen) *
+                           binomial(andereCount, andereGezogen);
+            const nenner = binomial(total, gezogen);
+
+            return nenner > 0 ? zaehler / nenner : 0;
+        }
+
+        // Erfolgswahrscheinlichkeit berechnen
+        function erfolgswahrscheinlichkeit(gezogen, benoetigt, symbolCount, jokerCount, totalDeck) {
+            if (benoetigt <= 0) return 1;
+
+            const andereCount = totalDeck - symbolCount - jokerCount;
+            let erfolg = 0;
+
+            for (let s = 0; s <= Math.min(symbolCount, gezogen); s++) {
+                for (let j = 0; j <= Math.min(jokerCount, gezogen - s); j++) {
+                    if (s + j >= benoetigt) {
+                        erfolg += multivariateHypergeomPMF(
+                            gezogen, s, j, symbolCount, jokerCount, andereCount
+                        );
+                    }
+                }
+            }
+
+            return Math.min(erfolg, 1);
+        }
+
+        // Matrix erstellen
+        function erstelleMatrix(symbolCount, jokerCount, totalDeck) {
+            const matrix = [];
+            for (let benoetigt = 1; benoetigt <= MAX_REQUIRED; benoetigt++) {
+                const row = [];
+                for (let gezogen = 1; gezogen <= MAX_DRAW; gezogen++) {
+                    row.push(erfolgswahrscheinlichkeit(gezogen, benoetigt, symbolCount, jokerCount, totalDeck));
+                }
+                matrix.push(row);
+            }
+            return matrix;
+        }
+
+        // Baseline berechnen
+        function berechneBaseline() {
+            const totalDeck = BASELINE.herz + BASELINE.karo + BASELINE.pik + BASELINE.kreuz + BASELINE.joker;
+            baselineMatrix = {
+                herz: erstelleMatrix(BASELINE.herz, BASELINE.joker, totalDeck),
+                karo: erstelleMatrix(BASELINE.karo, BASELINE.joker, totalDeck),
+                pik: erstelleMatrix(BASELINE.pik, BASELINE.joker, totalDeck),
+                kreuz: erstelleMatrix(BASELINE.kreuz, BASELINE.joker, totalDeck)
+            };
+        }
+
+        // Farbe für Absolut-Modus
+        function getAbsolutColor(value) {
+            if (value === 0) return '#ffffff';
+            if (value < 0.01) return '#d73027';
+
+            // Rot -> Gelb -> Grün
+            const stops = [
+                { pos: 0, r: 215, g: 48, b: 39 },
+                { pos: 0.25, r: 244, g: 109, b: 67 },
+                { pos: 0.5, r: 254, g: 224, b: 139 },
+                { pos: 0.75, r: 166, g: 217, b: 106 },
+                { pos: 1, r: 26, g: 152, b: 80 }
+            ];
+
+            let lower = stops[0], upper = stops[stops.length - 1];
+            for (let i = 0; i < stops.length - 1; i++) {
+                if (value >= stops[i].pos && value <= stops[i + 1].pos) {
+                    lower = stops[i];
+                    upper = stops[i + 1];
+                    break;
+                }
+            }
+
+            const range = upper.pos - lower.pos;
+            const factor = range > 0 ? (value - lower.pos) / range : 0;
+
+            const r = Math.round(lower.r + (upper.r - lower.r) * factor);
+            const g = Math.round(lower.g + (upper.g - lower.g) * factor);
+            const b = Math.round(lower.b + (upper.b - lower.b) * factor);
+
+            return `rgb(${r},${g},${b})`;
+        }
+
+        // Farbe für Differenz-Modus
+        function getDifferenzColor(value) {
+            // Clamp to -0.3 to 0.3
+            const clamped = Math.max(-0.3, Math.min(0.3, value));
+            const normalized = (clamped + 0.3) / 0.6; // 0 to 1
+
+            const stops = [
+                { pos: 0, r: 178, g: 24, b: 43 },
+                { pos: 0.25, r: 239, g: 138, b: 98 },
+                { pos: 0.5, r: 247, g: 247, b: 247 },
+                { pos: 0.75, r: 103, g: 169, b: 207 },
+                { pos: 1, r: 33, g: 102, b: 172 }
+            ];
+
+            let lower = stops[0], upper = stops[stops.length - 1];
+            for (let i = 0; i < stops.length - 1; i++) {
+                if (normalized >= stops[i].pos && normalized <= stops[i + 1].pos) {
+                    lower = stops[i];
+                    upper = stops[i + 1];
+                    break;
+                }
+            }
+
+            const range = upper.pos - lower.pos;
+            const factor = range > 0 ? (normalized - lower.pos) / range : 0;
+
+            const r = Math.round(lower.r + (upper.r - lower.r) * factor);
+            const g = Math.round(lower.g + (upper.g - lower.g) * factor);
+            const b = Math.round(lower.b + (upper.b - lower.b) * factor);
+
+            return `rgb(${r},${g},${b})`;
+        }
+
+        // Textfarbe bestimmen
+        function getTextColor(bgColor, value, mode) {
+            if (mode === 'absolut') {
+                if (value === 0) return '#999';
+                if (value < 0.35 || value > 0.7) return '#fff';
+                return '#000';
+            } else {
+                if (Math.abs(value) < 0.03) return '#999';
+                if (Math.abs(value) > 0.15) return '#fff';
+                return '#000';
+            }
+        }
+
+        // Heatmap rendern
+        function renderHeatmap(containerId, matrix, baseline, symbolName) {
+            const container = document.getElementById(containerId);
+            let html = '<table class="heatmap-table"><thead><tr><th></th>';
+
+            for (let i = 1; i <= MAX_DRAW; i++) {
+                html += `<th>${i}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            for (let row = 0; row < MAX_REQUIRED; row++) {
+                html += `<tr><td class="row-header">${row + 1}</td>`;
+
+                for (let col = 0; col < MAX_DRAW; col++) {
+                    const value = matrix[row][col];
+                    const baseValue = baseline ? baseline[row][col] : 0;
+                    const diff = value - baseValue;
+
+                    let displayValue, bgColor, textColor;
+
+                    if (currentMode === 'absolut') {
+                        displayValue = Math.round(value * 100) + '%';
+                        bgColor = getAbsolutColor(value);
+                        textColor = getTextColor(bgColor, value, 'absolut');
+                    } else {
+                        if (diff > 0.001) {
+                            displayValue = '+' + Math.round(diff * 100) + '%';
+                        } else if (diff < -0.001) {
+                            displayValue = Math.round(diff * 100) + '%';
+                        } else {
+                            displayValue = '±0';
+                        }
+                        bgColor = getDifferenzColor(diff);
+                        textColor = getTextColor(bgColor, diff, 'differenz');
+                    }
+
+                    html += `<td style="background:${bgColor};color:${textColor}">${displayValue}</td>`;
+                }
+                html += '</tr>';
+            }
+
+            html += '</tbody></table>';
+            html += '<div class="axis-label">Gezogene Karten →</div>';
+
+            container.innerHTML = html;
+        }
+
+        // Badge aktualisieren
+        function updateBadge(symbol, count) {
+            const badge = document.getElementById(`${symbol}-badge`);
+            const diff = count - BASELINE[symbol];
+
+            if (diff === 0) {
+                badge.textContent = '';
+                badge.className = 'diff-badge';
+            } else if (diff > 0) {
+                badge.textContent = `+${diff}`;
+                badge.className = 'diff-badge positive';
+            } else {
+                badge.textContent = `${diff}`;
+                badge.className = 'diff-badge negative';
+            }
+        }
+
+        // Legende aktualisieren
+        function updateLegend() {
+            const legend = document.getElementById('legend');
+
+            if (currentMode === 'absolut') {
+                legend.innerHTML = `
+                    <div class="legend-item">
+                        <span>0%</span>
+                        <div>
+                            <div class="legend-gradient absolut"></div>
+                            <div class="legend-labels">
+                                <span>unmöglich</span>
+                                <span>sicher</span>
+                            </div>
+                        </div>
+                        <span>100%</span>
+                    </div>
+                `;
+            } else {
+                legend.innerHTML = `
+                    <div class="legend-item">
+                        <span>-30%</span>
+                        <div>
+                            <div class="legend-gradient differenz"></div>
+                            <div class="legend-labels">
+                                <span>schlechter</span>
+                                <span>besser</span>
+                            </div>
+                        </div>
+                        <span>+30%</span>
+                    </div>
+                    <div style="color:#888;font-size:0.8rem;">Vergleich zu Baseline (5/5/5/5, 0 Joker)</div>
+                `;
+            }
+        }
+
+        // Alle Heatmaps aktualisieren
+        function updateAll() {
+            const herz = parseInt(document.getElementById('herz').value);
+            const karo = parseInt(document.getElementById('karo').value);
+            const pik = parseInt(document.getElementById('pik').value);
+            const kreuz = parseInt(document.getElementById('kreuz').value);
+            const joker = parseInt(document.getElementById('joker').value);
+
+            const totalDeck = herz + karo + pik + kreuz + joker;
+
+            // Werte anzeigen
+            document.getElementById('herz-value').textContent = herz;
+            document.getElementById('karo-value').textContent = karo;
+            document.getElementById('pik-value').textContent = pik;
+            document.getElementById('kreuz-value').textContent = kreuz;
+            document.getElementById('joker-value').textContent = joker;
+            document.getElementById('deck-total').textContent = totalDeck;
+
+            // Badges
+            updateBadge('herz', herz);
+            updateBadge('karo', karo);
+            updateBadge('pik', pik);
+            updateBadge('kreuz', kreuz);
+
+            // Matrizen berechnen
+            const matrices = {
+                herz: erstelleMatrix(herz, joker, totalDeck),
+                karo: erstelleMatrix(karo, joker, totalDeck),
+                pik: erstelleMatrix(pik, joker, totalDeck),
+                kreuz: erstelleMatrix(kreuz, joker, totalDeck)
+            };
+
+            // Heatmaps rendern
+            renderHeatmap('heatmap-herz', matrices.herz, baselineMatrix.herz, 'herz');
+            renderHeatmap('heatmap-karo', matrices.karo, baselineMatrix.karo, 'karo');
+            renderHeatmap('heatmap-pik', matrices.pik, baselineMatrix.pik, 'pik');
+            renderHeatmap('heatmap-kreuz', matrices.kreuz, baselineMatrix.kreuz, 'kreuz');
+
+            updateLegend();
+        }
+
+        // Modus setzen
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('mode-absolut').classList.toggle('active', mode === 'absolut');
+            document.getElementById('mode-differenz').classList.toggle('active', mode === 'differenz');
+            updateAll();
+        }
+
+        // Zurücksetzen
+        function resetToDefault() {
+            document.getElementById('herz').value = 5;
+            document.getElementById('karo').value = 5;
+            document.getElementById('pik').value = 5;
+            document.getElementById('kreuz').value = 5;
+            document.getElementById('joker').value = 0;
+            updateAll();
+        }
+
+        // Event Listener
+        ['herz', 'karo', 'pik', 'kreuz', 'joker'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateAll);
+        });
+
+        // Initialisierung
+        berechneBaseline();
+        updateAll();
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Virtual Environment
+.venv/
+
+# IDE
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Claude
+.claude/
+
+# Output
+output/
